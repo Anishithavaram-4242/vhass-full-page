@@ -1,0 +1,182 @@
+.navbar {
+  height: auto;
+  position: relative;
+
+  background:transparent;
+  background-repeat: repeat;
+  background-size: cover;
+
+  color: #ffffff;
+  font-family: 'Gothic A1', sans-serif;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  z-index: 1;
+}
+
+
+
+.navbar h1 {
+    display: flex;
+    align-items: center;
+    
+    font-size: 30px;
+    margin: 0;
+}
+
+ul {
+    flex: 1;
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0 20px;
+    padding: 0;
+    justify-content: center;
+}
+ul li{
+    display:inline-block;
+    margin: 0;
+}
+.user-menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 200px;
+}
+.navbar .login {
+  font-family: 'Gothic A1', sans-serif;
+  width: 120px;
+  background-color: transparent;
+  border: 2px solid #ffffff;
+  color: white;
+  font-size: 16px;
+  padding: 3px 3px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.navbar .login::before {
+  content: '';
+  position: absolute;
+  top: var(--y, 50%);
+  left: var(--x, 50%);
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, #6738c6, #000000);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.navbar .login:hover::before {
+  opacity: 1;
+}
+
+.navbar .login:hover {
+  transform: scale(1.05);
+  color: white;
+}
+
+.navbar .register {
+    font-size: 'Gothic A1', sans-serif;
+    width: 120px;
+    background-color: #ffffff;
+    border: #ffffff, 2px solid;
+    color: black;
+    font-size: 16px;
+    padding: 3px 3px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+.navbar .register:hover {
+    background-color: #000000;
+    color: rgb(255, 255, 255);
+    transition: background-color 0.3s ease;
+    transform: scale(1.05);
+}
+.navbar .user-menu {
+    padding-right: 0;
+}
+/* Reset default spacing */
+body, html {
+    margin: 0;
+    padding: 0;
+}
+.navbar .admin-logout {
+    font-size: 'Gothic A1', sans-serif;
+    width: 120px;
+    background-color: #000000;
+    border: #ffffff, 2px solid;
+    color: white;
+    font-size: 16px;
+    padding: 3px 3px;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 15px;
+}
+.navbar .admin-logout:hover {
+    background-color: #ff0000;
+    color: rgb(255, 255, 255);
+    transition: background-color 0.3s ease;
+    transform: scale(1.05);
+    
+}
+.nav-libtn {
+  font-family: 'Gothic A1', sans-serif;
+  background-color: transparent;
+  font-weight: bold;
+  color: white;
+  font-size: 20px;
+  padding: 3px 10px;
+  margin: 10px;
+  cursor: pointer;
+  border-radius: 7px;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+  transition: transform 0.3s ease;
+}
+
+.nav-libtn::before {
+  content: '';
+  position: absolute;
+  top: var(--y, 50%);
+  left: var(--x, 50%);
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at center, #5500ff70, #000000);
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.nav-libtn:hover::before {
+  opacity: 1;
+}
+
+.nav-libtn:hover {
+  transform: scale(1.05);
+  color: white;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px; /* Adjust this value for minimal spacing */
+}
+
+.logo {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-right: 0;
+}
