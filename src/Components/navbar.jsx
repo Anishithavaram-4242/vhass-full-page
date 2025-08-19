@@ -41,6 +41,7 @@ function Navbar() {
             <li><button className="nav-libtn" onClick={() => navigate("/Services")} onMouseMove={handleMouseMove}>Services</button></li>
             <li><button className="nav-libtn" onClick={() => navigate("/aboutus")} onMouseMove={handleMouseMove}>About Us</button></li>
             <li><button className="nav-libtn" onClick={() => navigate("/helpdesk")} onMouseMove={handleMouseMove}>Help Desk</button></li>
+            
           </ul>
         </nav>
 
@@ -49,11 +50,11 @@ function Navbar() {
             <div style={{ color: 'white', fontSize: '14px' }}>Loading...</div>
           ) : user ? (
             <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <button className="nav-libtn" onClick={() => navigate("/dashboard")} onMouseMove={handleMouseMove}>Dashboard</button>
+              <button className="login" onClick={() => navigate("/dashboard")} onMouseMove={handleMouseMove}>Dashboard</button>
               {user.role === 'admin' && (
-                <button className="nav-libtn" onClick={() => navigate("/admin")} onMouseMove={handleMouseMove} style={{ backgroundColor: '#B88AFF', color: '#000000' }}>Admin</button>
+                <button className="login" onClick={() => navigate("/admin")} onMouseMove={handleMouseMove} style={{ backgroundColor: '#B88AFF', color: '#000000' }}>Admin</button>
               )}
-              <span style={{ color: 'white', fontSize: '14px', fontWeight: '500' }}>Welcome, {user.name}</span>
+            
             </div>
           ) : (
             <button className="login" onClick={() => navigate("/auth")} onMouseMove={handleMouseMove}>LOGIN</button>

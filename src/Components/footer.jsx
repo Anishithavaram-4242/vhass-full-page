@@ -1,6 +1,6 @@
 import React from "react";
 import "./footer.css";
-import { FaPaperPlane, FaMapMarkerAlt, FaPhone, FaEnvelope, FaChevronRight } from "react-icons/fa";
+import { FaMapMarkerAlt, FaPhone, FaEnvelope } from "react-icons/fa";
 import {
   AiFillLinkedin, 
   AiFillYoutube, 
@@ -15,73 +15,87 @@ const Footer = () => {
         <div className="footer-content">
           <div className="footer-main">
             <div className="footer-brand">
-              <img src="./vhass-logo.png" alt="VHASS Cybersecurity" className="footer-logo" />
+              <h1 className="footer-logo-text">VHASS</h1>
               <p className="footer-description">
                 Empowering the digital world with cutting-edge cybersecurity education and solutions.
               </p>
+              
+              <div className="footer-social">
+                <h5>Follow Us</h5>
+                <div className="social-links">
+                  <a href="https://www.linkedin.com/company/vhass-softwares-private-limited/" aria-label="LinkedIn">
+                    <AiFillLinkedin size={20} />
+                  </a>
+                  <a href="https://www.youtube.com/@Vhass-d6g" aria-label="YouTube">
+                    <AiFillYoutube size={20} />
+                  </a>
+                  <a href="https://www.instagram.com/vhass_official" aria-label="Instagram">
+                    <AiFillInstagram size={20} />
+                  </a>
+                </div>
+              </div>
+
+              <p className="footer-copyright">
+                © 2025 VHASS Software® Pvt. Ltd. All rights reserved.
+              </p>
             </div>
 
-            <div className="footer-links-container">
-              <div className="footer-links-col">
+            <div className="footer-links-grid">
+              <div className="footer-links-section">
                 <h4 className="footer-title">Quick Links</h4>
-                <ul className="footer-links">
-                  <li><Link to="/"><FaChevronRight /> Home</Link></li>
-                  <li><Link to="/courses"><FaChevronRight /> Courses</Link></li>
-                  <li><Link to="/workshop"><FaChevronRight /> Workshop</Link></li>
-                  <li><Link to="/entrepreneur"><FaChevronRight /> Entrepreneur</Link></li>
-                  <li><Link to="/about"><FaChevronRight /> About Us</Link></li>
-                  <li><Link to="/contacts"><FaChevronRight /> HelpDesk</Link></li>
-                </ul>
-              </div>
-
-              <div className="footer-links-col">
-  <h4 className="footer-title">Courses</h4>
-  <ul className="footer-links horizontal">
-    <li><Link to="/courses"><FaChevronRight /> Ethical Hacking</Link></li>
-    <li><Link to="/courses"><FaChevronRight /> Bounty Hunting</Link></li>
-    <li><Link to="/courses"><FaChevronRight /> Awareness of Cyber Crime</Link></li>
-    <li><Link to="/courses"><FaChevronRight /> Cyber Security for Teenagers</Link></li>
-    <li><Link to="/courses"><FaChevronRight /> Entrepreneurship for Beginners</Link></li>
-  </ul>
-</div>
-
-
-              <div className="footer-links-col">
-                <h4 className="footer-title">Contact Us</h4>
-                <ul className="footer-contact">
-                  <li><FaMapMarkerAlt /> <span>#2-1-70, Brilliants School Area,<br />Ibrahimpatnam Krishna - 521 456,<br />Andhra Pradesh</span></li>
-                  <li><FaPhone /> +91 8985320226</li>
-                  <li><FaEnvelope /> info@vhass.in</li>
-                </ul>
+                <div className="footer-links-table">
+                  <div className="footer-links-row">
+                    <Link to="/" className="footer-link-cell">Home</Link>
+                    <Link to="/courses" className="footer-link-cell">Ethical Hacking</Link>
+                    <Link to="/contact" className="footer-link-cell">Contact Us</Link>
+                  </div>
+                  <div className="footer-links-row">
+                    <Link to="/courses" className="footer-link-cell">Courses</Link>
+                    <Link to="/courses" className="footer-link-cell">Bounty Hunting</Link>
+                    <div className="footer-link-cell">
+                      9-1-70, Brilliant's School Area,
+                    </div>
+                  </div>
+                  <div className="footer-links-row">
+                    <Link to="/workshop" className="footer-link-cell">Workshop</Link>
+                    <Link to="/courses" className="footer-link-cell">Awareness of Cyber Crime</Link>
+                    <div className="footer-link-cell">
+                      Ibrahimpatnam Krishna-521456,
+                    </div>
+                  </div>
+                  <div className="footer-links-row">
+                    <Link to="/entrepreneur" className="footer-link-cell">Entrepreneur</Link>
+                    <Link to="/courses" className="footer-link-cell">Cyber Security for Teenagers</Link>
+                    <div className="footer-link-cell">
+                      Andhra Pradesh
+                    </div>
+                  </div>
+                  <div className="footer-links-row">
+                    <Link to="/about" className="footer-link-cell">About Us</Link>
+                    <Link to="/courses" className="footer-link-cell">Entrepreneurship for Beginners</Link>
+                    <div className="footer-link-cell contact-info">
+                      <div className="contact-item">
+                        <FaPhone className="contact-icon" />
+                        +91 8985380266
+                      </div>
+                      <div className="contact-item">
+                        <FaEnvelope className="contact-icon" />
+                        info@vhass.in
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="footer-social">
-            <h5>Follow Us</h5>
-            <div className="social-links">
-              <a href="https://www.linkedin.com/company/vhass-softwares-private-limited/" aria-label="LinkedIn">
-                <AiFillLinkedin size={20} />
-              </a>
-              <a href="https://www.youtube.com/@Vhass-d6g" aria-label="YouTube">
-                <AiFillYoutube size={20} />
-              </a>
-              <a href="https://www.instagram.com/vhass_official" aria-label="Instagram">
-                <AiFillInstagram size={20} />
-              </a>
-            </div>
-          </div>
-        </div>
-
-        <div className="footer-bottom">
-          <div className="footer-legal">
-            <p>&copy; {new Date().getFullYear()} VHASS Softwares Pvt. Ltd. All rights reserved.</p>
-            <div className="legal-links">
+          <div className="footer-bottom">
+            <div className="footer-legal-links">
               <Link to="/terms-and-conditions">Terms and Conditions</Link>
               <span>|</span>
-              <Link to="/Refund-policy">Refund Policy</Link>
+              <Link to="/refund-policy">Refund Policy</Link>
               <span>|</span>
-              <Link to="/Privacy-policy">Privacy Policy</Link>
+              <Link to="/privacy-policy">Privacy Policy</Link>
             </div>
           </div>
         </div>

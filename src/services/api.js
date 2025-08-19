@@ -158,6 +158,14 @@ class ApiService {
     return this.makeRequest('/user/enrollments');
   }
 
+  // Contact
+  async sendContactMessage(payload) {
+    return this.makeRequest('/contact', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
   // Payment APIs
   async phonepeCheckout(type, id) {
     const endpoint = type === 'course' ? `/course/phonepe/checkout/${id}` : `/workshop/phonepe/checkout/${id}`;

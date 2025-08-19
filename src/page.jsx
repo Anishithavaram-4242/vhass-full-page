@@ -8,6 +8,7 @@ import { Input } from "./components/ui/input"
 import { Label } from "./components/ui/label"
 import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram } from "lucide-react"
 import Navbar from "./components/navbar"
+import Footer from "./components/footer"  
 
 export default function VHASSCoursesPage() {
   const navigate = useNavigate()
@@ -72,6 +73,7 @@ export default function VHASSCoursesPage() {
   }
 
   return (
+    <div>
     <div className="min-h-screen">
       {/* Header */}
       <Navbar />
@@ -260,143 +262,8 @@ export default function VHASSCoursesPage() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="bg-slate-800 text-white mt-20">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-            {/* Company Description */}
-            <div className="space-y-4">
-              <div className="flex items-center space-x-2 mb-4">
-                <img src="/images/vhass-logo-new.jpeg" alt="VHASS Logo" className="w-8 h-8" />
-                <span className="text-2xl font-bold">VHASS</span>
-              </div>
-              <p className="text-gray-300 leading-relaxed">
-                Empowering the digital world with cutting-edge cybersecurity education and solutions.
-              </p>
-            </div>
-
-            {/* Quick Links and Courses */}
-            <div className="md:col-span-2">
-              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-3 mb-6">
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Home
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Courses
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Workshops
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Support
-                  </a>
-                </li>
-              </ul>
-              
-              <h4 className="text-lg font-semibold mb-4">Our Courses</h4>
-              <ul className="space-y-3">
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Ethical Hacking
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Bug Bounty
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Cyber Awareness
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Teen Security
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors block text-sm">
-                    › Entrepreneurship
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact Us */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-              <div className="space-y-3">
-                <div className="flex items-start space-x-3">
-                  <MapPin className="w-5 h-5 text-blue-400 mt-1 flex-shrink-0" />
-                  <div className="text-gray-300 text-sm">
-                    <p>#2-1-70, Brilliants School Area,</p>
-                    <p>Ibrahimpatnam, Krishna - 521 456,</p>
-                    <p>Andhra Pradesh, India</p>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Phone className="w-5 h-5 text-blue-400" />
-                  <span className="text-gray-300 text-sm">+91 8985820226</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Mail className="w-5 h-5 text-blue-400" />
-                  <span className="text-gray-300 text-sm">info@vhass.in</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Social Media and Copyright */}
-          <div className="border-t border-gray-700 mt-8 pt-8">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="mb-4 md:mb-0">
-                <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
-                <div className="flex space-x-4">
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                    <Linkedin className="w-5 h-5 text-slate-800" />
-                  </div>
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                    <Youtube className="w-5 h-5 text-slate-800" />
-                  </div>
-                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center">
-                    <Instagram className="w-5 h-5 text-slate-800" />
-                  </div>
-                </div>
-              </div>
-              <div className="text-center md:text-right">
-                <p className="text-gray-400 text-sm">© 2025 VHASS Softwares Pvt. Ltd. All rights reserved.</p>
-                <div className="flex flex-wrap justify-center md:justify-end space-x-4 mt-2 text-sm">
-                  <a href="#" className="text-gray-400 hover:text-white">
-                    Terms & Conditions
-                  </a>
-                  <span className="text-gray-600">|</span>
-                  <a href="#" className="text-gray-400 hover:text-white">
-                    Refund Policy
-                  </a>
-                  <span className="text-gray-600">|</span>
-                  <a href="#" className="text-gray-400 hover:text-white">
-                    Privacy Policy
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+    </div>
+    <Footer />
     </div>
   )
 } 

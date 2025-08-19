@@ -1,5 +1,6 @@
 "use client"
 import React from "react"
+import api from "../services/api"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import Navbar from "../Components/navbar";
@@ -55,10 +56,22 @@ export default function HelpDeskPage() {
     })
   }
 
-  const handleSubmit = (e) => {
+  const [sending, setSending] = useState(false)
+  const [status, setStatus] = useState("")
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
-    // Handle form submission here
+    setStatus("")
+    setSending(true)
+    try {
+      await api.sendContactMessage(formData)
+      setStatus("Message sent successfully.")
+      setFormData({ name: "", email: "", message: "" })
+    } catch (err) {
+      setStatus(err?.message || "Failed to send message")
+    } finally {
+      setSending(false)
+    }
   }
 
   return (
@@ -197,11 +210,15 @@ Frequently Asked Questions</h1>
                   required
                 />
               </div>
+              {status && (
+                <div className="text-sm text-gray-600">{status}</div>
+              )}
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium"
+                disabled={sending}
+                className="w-full bg-blue-600 disabled:opacity-60 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors font-medium"
               >
-                Send Message
+                {sending ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>

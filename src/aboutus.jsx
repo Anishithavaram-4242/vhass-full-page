@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Footer from './Components/footer';
 import Navbar from './Components/navbar';
-
+import { Link } from "react-router-dom";
+import api from "./services/api";
 const AboutUs = () => {
+  const [contact, setContact] = useState({ name: "", email: "", message: "" });
+  const [sending, setSending] = useState(false);
+  const [status, setStatus] = useState("");
   return (
     <div>
     <Navbar/>
@@ -18,13 +22,17 @@ const AboutUs = () => {
             Empowering the digital world through cutting-edge cybersecurity education
           </p>
           <div className="flex justify-center gap-4">
-            <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/20">
-              Explore Courses
-            </button>
-            <button className="px-8 py-3 bg-gray-800 rounded-full font-semibold hover:bg-gray-700 transition-all border border-gray-700">
-              Contact Us
-            </button>
-          </div>
+  <Link to="/course">
+    <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/20">
+      Explore Courses
+    </button>
+  </Link>
+  <a href="#contact">
+    <button className="px-8 py-3 bg-gray-800 rounded-full font-semibold hover:bg-gray-700 transition-all border border-gray-700">
+      Contact Us
+    </button>
+  </a>
+</div>
         </div>
       </header>
 
@@ -235,9 +243,13 @@ const AboutUs = () => {
             Ready to make a difference in the digital world? Explore our courses and become part of the solution.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/course">
+         
+ 
             <button className="px-8 py-4 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl font-bold hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/30">
               Browse Courses
             </button>
+          </Link>
             <button className="px-8 py-4 bg-gray-900 rounded-xl font-bold hover:bg-gray-800 transition-all border border-gray-700">
               Request Information
             </button>
@@ -306,7 +318,7 @@ const AboutUs = () => {
       </section>
 
       {/* Contact Section */}
-      <section className="py-16 px-6">
+      <section id="contact" className="py-16 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4">Still have questions?</h2>
@@ -324,21 +336,21 @@ const AboutUs = () => {
                     <div className="text-blue-400 mr-4">✉️</div>
                     <div>
                       <h4 className="font-bold">Email</h4>
-                      <p className="text-gray-400">info@vhazan.com</p>
+                      <p className="text-gray-400">info@vhass.in</p>
                     </div>
                   </div>
                   <div className="flex items-start">
                     <div className="text-purple-400 mr-4">📞</div>
                     <div>
                       <h4 className="font-bold">Phone</h4>
-                      <p className="text-gray-400">+91 886563026</p>
+                      <p className="text-gray-400">+91 8985380266</p>
                     </div>
                   </div>
                   <div className="flex items-start">
                     <div className="text-blue-400 mr-4">🏢</div>
                     <div>
                       <h4 className="font-bold">Location</h4>
-                      <p className="text-gray-400">Hyderabad, India</p>
+                      <p className="text-gray-400">9-1-70, Brilliant's School Area,<br/>Ibrahimpatnam Krishna-521456,<br/>Andhra Pradesh</p>
                     </div>
                   </div>
                 </div>
@@ -348,36 +360,67 @@ const AboutUs = () => {
             <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-2xl p-1">
               <div className="bg-gray-900 rounded-2xl p-8">
                 <h3 className="text-xl font-bold mb-6">Send us a message</h3>
-                <form className="space-y-4">
+                <form
+                  className="space-y-4"
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    setStatus("");
+                    setSending(true);
+                    try {
+                      await api.sendContactMessage(contact);
+                      setStatus("Message sent successfully.");
+                      setContact({ name: "", email: "", message: "" });
+                    } catch (err) {
+                      setStatus(err?.message || "Failed to send message");
+                    } finally {
+                      setSending(false);
+                    }
+                  }}
+                >
                   <div>
                     <label className="block text-sm font-medium mb-2">Name</label>
-                    <input 
-                      type="text" 
+                    <input
+                      name="name"
+                      value={contact.name}
+                      onChange={(e) => setContact({ ...contact, name: e.target.value })}
+                      type="text"
                       className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Your name"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Email</label>
-                    <input 
-                      type="email" 
+                    <input
+                      name="email"
+                      value={contact.email}
+                      onChange={(e) => setContact({ ...contact, email: e.target.value })}
+                      type="email"
+                      required
                       className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Your email"
                     />
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">Message</label>
-                    <textarea 
+                    <textarea
+                      name="message"
+                      value={contact.message}
+                      onChange={(e) => setContact({ ...contact, message: e.target.value })}
                       rows="4"
+                      required
                       className="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="How can we help you?"
                     ></textarea>
                   </div>
-                  <button 
+                  {status && (
+                    <div className="text-sm text-gray-300">{status}</div>
+                  )}
+                  <button
                     type="submit"
-                    className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-bold hover:from-blue-600 hover:to-purple-700 transition-all"
+                    disabled={sending}
+                    className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg font-bold hover:from-blue-600 hover:to-purple-700 transition-all disabled:opacity-60"
                   >
-                    Send Message
+                    {sending ? "Sending..." : "Send Message"}
                   </button>
                 </form>
               </div>
