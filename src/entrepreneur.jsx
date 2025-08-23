@@ -1,7 +1,7 @@
-import Footer from "./components/footer"
+import Footer from "./Components/footer"
 import React from "react"
 import { useNavigate } from "react-router-dom"  
-import Navbar from "./components/navbar"
+import Navbar from "./Components/navbar"
 export default function EntrepreneurshipPage() {
   return (
     <div>

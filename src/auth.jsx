@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom"
 import Navbar from "./Components/navbar";
 import Footer from "./Components/footer";
 import { useAuth } from "./context/AuthContext.jsx";
-import GoogleLogin from "./components/GoogleLogin.jsx";
+import GoogleLogin from "./Components/GoogleLogin.jsx";
 
 export default function AuthPage() {
   const navigate = useNavigate();
