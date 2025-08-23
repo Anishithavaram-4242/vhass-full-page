@@ -20,6 +20,7 @@ import PaymentCallback from "./components/PaymentCallback.jsx"
 import PhonePeTest from "./Components/PhonePeTest.jsx"
 import PhonePeDebug from "./Components/PhonePeDebug.jsx"
 import AdminDashboard from "./Components/AdminDashboard.jsx"
+import Policies from "./Components/Policies.jsx"
 import { GOOGLE_CLIENT_ID } from "./config/googleConfig.js"
 
 const root = ReactDOM.createRoot(document.getElementById("root"))
@@ -45,6 +46,7 @@ root.render(
                     <Route path="/phonepe-test" element={<PhonePeTest />} />
                     <Route path="/phonepe-debug" element={<PhonePeDebug />} />
                     <Route path="/admin" element={<AdminDashboard />} />
+                    <Route path="/policies" element={<Policies />} />
           </Routes>
         </BrowserRouter>
       </AuthProvider>

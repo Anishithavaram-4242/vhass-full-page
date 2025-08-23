@@ -8,7 +8,38 @@ import { Input } from "./components/ui/input"
 import { Label } from "./components/ui/label"
 import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram } from "lucide-react"
 import Navbar from "./components/navbar"
-import Footer from "./components/footer"  
+import Footer from "./components/footer"
+
+// Helper function to construct proper image URL
+const getImageUrl = (imagePath) => {
+  // Handle null, undefined, or empty strings
+  if (!imagePath || imagePath === 'null' || imagePath === 'undefined') {
+    return "/images/circuit-board.png";
+  }
+  
+  // If it's already a full URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it's a filename (no slashes), construct the uploads URL
+  if (!imagePath.includes('/')) {
+    return `/uploads/${imagePath}`;
+  }
+  
+  // If it's a relative path starting with uploads/, return as is
+  if (imagePath.startsWith('uploads/')) {
+    return `/${imagePath}`;
+  }
+  
+  // If it's already a relative path starting with /uploads/, return as is
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  
+  // If it's a relative path, return as is
+  return imagePath;
+};
 
 export default function VHASSCoursesPage() {
   const navigate = useNavigate()
@@ -28,6 +59,10 @@ export default function VHASSCoursesPage() {
         const res = await fetch('/api/course/all', { credentials: 'include' })
         if (!res.ok) throw new Error('Failed to load courses')
         const data = await res.json()
+        
+        // Debug: Log the raw course data to see image values
+        console.log('Raw course data:', data.courses?.map(c => ({ title: c.title, image: c.image })))
+        
         const normalized = (data.courses || []).map((c) => ({
           _id: c._id,
           title: c.title,
@@ -36,6 +71,14 @@ export default function VHASSCoursesPage() {
           price: `₹${Number(c.price || c.discountedPrice || c.originalPrice || 0)}`,
           image: c.image || "/images/circuit-board.png",
         }))
+        
+        // Debug: Log the normalized data and final image URLs
+        console.log('Normalized courses:', normalized.map(c => ({ 
+          title: c.title, 
+          originalImage: c.image, 
+          finalImageUrl: getImageUrl(c.image) 
+        })))
+        
         setCourses(normalized)
         setTimeout(() => {
           const viewDetailsState = {}
@@ -114,9 +157,13 @@ export default function VHASSCoursesPage() {
             >
               <div className="relative">
                 <img
-                  src={course.image || "/placeholder.svg"}
+                  src={getImageUrl(course.image)}
                   alt={course.title}
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
+                  onError={(e) => {
+                    console.error('Image failed to load:', course.title, getImageUrl(course.image))
+                    e.target.src = "/images/circuit-board.png"
+                  }}
                 />
                 <div
                   className="absolute top-4 right-4 px-3 py-1 rounded-full text-sm font-bold"

@@ -336,7 +336,7 @@ const AboutUs = () => {
                     <div className="text-blue-400 mr-4">✉️</div>
                     <div>
                       <h4 className="font-bold">Email</h4>
-                      <p className="text-gray-400">info@vhass.in</p>
+                      <p className="text-gray-400">info@vhassacademy.com</p>
                     </div>
                   </div>
                   <div className="flex items-start">

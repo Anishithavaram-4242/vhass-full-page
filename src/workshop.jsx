@@ -2,52 +2,49 @@
 import React from "react"
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import { Button } from "./components/ui2/button"
-import { Card, CardContent, CardHeader, CardTitle } from "./components/ui2/card"
-import { Input } from "./components/ui2/input"
-import { Label } from "./components/ui2/label"
+import { Button } from "./Components/ui2/button"
+import { Card, CardContent, CardHeader, CardTitle } from "./Components/ui2/card"
+import { Input } from "./Components/ui2/input"
+import { Label } from "./Components/ui2/label"
 import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram } from "lucide-react"
-import Navbar from "./components/navbar"
-import  Footer from "./components/footer"
+import Navbar from "./Components/navbar"
+import  Footer from "./Components/footer"
 
-const workshops = [
-  {
-    id: 1,
-    title: "Certified Ethical Hacker (CEH)",
-    instructor: "Instructor- VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration- 28 Hours",
-    price: "₹25000",
-    image: "/images/circuit-board.png",
-  },
-  {
-    id: 2,
-    title: "Awareness of Cyber Crime And Threats",
-    instructor: "Instructor- VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration- 20 Hours",
-    price: "₹1000",
-    image: "/images/robot-desk.png",
-  },
-  {
-    id: 3,
-    title: "Cyber Suraksha – 30-Day Cybersecurity Empowerment for Small Businesses",
-    instructor: "Instructor- VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration- 45 Hours",
-    price: "₹8000",
-    image: "/images/business-gears.png",
-  },
-  {
-    id: 4,
-    title: "Zero to Founder (Entrepreneurship Edition - Full Course For beginners)",
-    instructor: "Instructor- VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration- 40 Hours",
-    price: "₹12999",
-    image: "/images/entrepreneurship.png",
-  },
-]
+// Helper function to construct proper image URL
+const getImageUrl = (imagePath) => {
+  // Handle null, undefined, or empty strings
+  if (!imagePath || imagePath === 'null' || imagePath === 'undefined') {
+    return "/images/circuit-board.png";
+  }
+  
+  // If it's already a full URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it's a filename (no slashes), construct the uploads URL
+  if (!imagePath.includes('/')) {
+    return `/uploads/${imagePath}`;
+  }
+  
+  // If it's a relative path starting with uploads/, return as is
+  if (imagePath.startsWith('uploads/')) {
+    return `/${imagePath}`;
+  }
+  
+  // If it's already a relative path starting with /uploads/, return as is
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  
+  // If it's a relative path, return as is
+  return imagePath;
+};
 
 export default function VHASSWorkshopsPage() {
   const navigate = useNavigate()
   const [showViewDetails, setShowViewDetails] = useState({})
+  const [workshops, setWorkshops] = useState([])
   const [showEnrollNow, setShowEnrollNow] = useState(null)
   const [showEnrollmentForm, setShowEnrollmentForm] = useState(null)
   const [formData, setFormData] = useState({
@@ -57,16 +54,27 @@ export default function VHASSWorkshopsPage() {
   })
 
   useEffect(() => {
-    // Show view details for all workshops after 2 seconds
-    const timer = setTimeout(() => {
-      const viewDetailsState = {}
-              workshops.forEach((workshop) => {
-        viewDetailsState[workshop.id] = true
-      })
-      setShowViewDetails(viewDetailsState)
-    }, 2000)
-
-    return () => clearTimeout(timer)
+    const API = import.meta.env.VITE_API_URL || '/api'
+    // Fetch workshops from backend
+    const loadWorkshops = async () => {
+      try {
+        const res = await fetch(`${API}/workshop/all`, { credentials: 'include' })
+        if (!res.ok) throw new Error('Failed to load workshops')
+        const data = await res.json()
+        const list = Array.isArray(data.workshops) ? data.workshops : []
+        setWorkshops(list)
+        // After a small delay, enable view details buttons
+        setTimeout(() => {
+          const state = {}
+          list.forEach((w) => { state[w._id] = true })
+          setShowViewDetails(state)
+        }, 1000)
+      } catch (e) {
+        console.error('Failed to fetch workshops:', e)
+        setWorkshops([])
+      }
+    }
+    loadWorkshops()
   }, [])
 
   const handleViewDetails = (workshopId) => {
@@ -127,13 +135,13 @@ export default function VHASSWorkshopsPage() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {workshops.map((workshop, index) => (
             <Card
-              key={workshop.id}
+              key={workshop._id || index}
               className="group hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl border-0 overflow-hidden"
               style={{ backgroundColor: "#FFFFFF" }}
             >
               <div className="relative">
                 <img
-                  src={workshop.image || "/placeholder.svg"}
+                  src={getImageUrl(workshop.image)}
                   alt={workshop.title}
                   className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                 />
@@ -154,24 +162,20 @@ export default function VHASSWorkshopsPage() {
               <CardContent className="pt-0">
                 <div className="space-y-3 mb-6">
                   <p className="text-sm" style={{ color: "#666666" }}>
-                    {workshop.instructor}
+                    {workshop.createdBy || workshop.instructor || "VHASS SOFTWARES PRIVATE LIMITED"}
                   </p>
                   <p className="text-sm" style={{ color: "#666666" }}>
-                    {workshop.duration}
+                    {`Duration- ${workshop.duration || 0} Hours`}
                   </p>
                   <p className="text-3xl font-bold" style={{ color: "#B88AFF" }}>
-                    {workshop.price}
+                    {`₹${workshop.price || 0}`}
                   </p>
                 </div>
 
-                {showViewDetails[workshop.id] && (
+                {showViewDetails[workshop._id || index] && (
                   <Button
                     onClick={() => {
-                      const slug = workshop.title
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "-")
-                        .replace(/(^-|-$)/g, "")
-                      navigate(`/workshop/${slug}`)
+                      navigate(`/workshop/${workshop._id}`)
                     }}
                     className="w-full text-white font-semibold py-3 rounded-lg hover:opacity-90 transition-all duration-200 transform hover:scale-105"
                     style={{ backgroundColor: "#000000" }}

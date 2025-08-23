@@ -1,0 +1,43 @@
+services:
+  # Backend API Service
+  - type: web
+    name: vhass-backend
+    env: node
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: MONGODB_URI
+        fromService:
+          name: mongodb
+          type: pserv
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: FRONTEND_URL
+        value: https://vhass-frontend.onrender.com
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # Frontend React App
+  - type: web
+    name: vhass-frontend
+    env: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: ./dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://vhass-backend.onrender.com
+    autoDeploy: true
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+databases:
+  - name: mongodb
+    databaseName: vhass
+    user: vhass

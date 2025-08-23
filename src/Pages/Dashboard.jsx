@@ -6,6 +6,37 @@ import Footer from "../Components/footer";
 import apiService from "../services/api.js";
 import "./Dashboard.css";
 
+// Helper function to construct proper image URL
+const getImageUrl = (imagePath) => {
+  // Handle null, undefined, or empty strings
+  if (!imagePath || imagePath === 'null' || imagePath === 'undefined') {
+    return "/images/circuit-board.png";
+  }
+  
+  // If it's already a full URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it's a filename (no slashes), construct the uploads URL
+  if (!imagePath.includes('/')) {
+    return `/uploads/${imagePath}`;
+  }
+  
+  // If it's a relative path starting with uploads/, return as is
+  if (imagePath.startsWith('uploads/')) {
+    return `/${imagePath}`;
+  }
+  
+  // If it's already a relative path starting with /uploads/, return as is
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  
+  // If it's a relative path, return as is
+  return imagePath;
+};
+
 function Dashboard() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
@@ -310,7 +341,7 @@ function Dashboard() {
                 registeredCourses.map((course) => (
                   <div key={course._id} className="course-card">
                     <div className="course-image">
-                      <img src={course.image || "/default-course.jpg"} alt={course.title} />
+                      <img src={getImageUrl(course.image)} alt={course.title} />
                     </div>
                     <div className="course-content">
                       <h3>{course.title}</h3>
@@ -354,7 +385,7 @@ function Dashboard() {
                 registeredWorkshops.map((workshop) => (
                   <div key={workshop._id} className="workshop-card">
                     <div className="workshop-image">
-                      <img src={workshop.image || "/default-workshop.jpg"} alt={workshop.title} />
+                      <img src={getImageUrl(workshop.image)} alt={workshop.title} />
                     </div>
                     <div className="workshop-content">
                       <h3>{workshop.title}</h3>

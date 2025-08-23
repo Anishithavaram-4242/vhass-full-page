@@ -10,6 +10,37 @@ import Navbar from "../../components/navbar"
 import { useAuth } from "../../context/AuthContext.jsx"
 import apiService from "../../services/api.js"
 
+// Helper function to construct proper image URL
+const getImageUrl = (imagePath) => {
+  // Handle null, undefined, or empty strings
+  if (!imagePath || imagePath === 'null' || imagePath === 'undefined') {
+    return "/images/circuit-board.png";
+  }
+  
+  // If it's already a full URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it's a filename (no slashes), construct the uploads URL
+  if (!imagePath.includes('/')) {
+    return `/uploads/${imagePath}`;
+  }
+  
+  // If it's a relative path starting with uploads/, return as is
+  if (imagePath.startsWith('uploads/')) {
+    return `/${imagePath}`;
+  }
+  
+  // If it's already a relative path starting with /uploads/, return as is
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  
+  // If it's a relative path, return as is
+  return imagePath;
+};
+
 // Legacy static fallback (kept for reference); dynamic fetch will be used first
 const courseData = {
   "certified-ethical-hacker-ceh": {
@@ -265,7 +296,7 @@ export default function CourseDetailsPage() {
           </h1>
           <div className="max-w-4xl mx-auto mb-8">
             <img
-              src={course.image || "/placeholder.svg"}
+              src={getImageUrl(course.image)}
               alt={course.title}
               className="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl"
             />

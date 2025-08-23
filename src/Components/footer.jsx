@@ -80,7 +80,7 @@ const Footer = () => {
                       </div>
                       <div className="contact-item">
                         <FaEnvelope className="contact-icon" />
-                        info@vhass.in
+                        info@vhassacademy.com
                       </div>
                     </div>
                   </div>
@@ -91,11 +91,11 @@ const Footer = () => {
 
           <div className="footer-bottom">
             <div className="footer-legal-links">
-              <Link to="/terms-and-conditions">Terms and Conditions</Link>
+              <Link to="/policies">Terms and Conditions</Link>
               <span>|</span>
-              <Link to="/refund-policy">Refund Policy</Link>
+              <Link to="/policies">Refund Policy</Link>
               <span>|</span>
-              <Link to="/privacy-policy">Privacy Policy</Link>
+              <Link to="/policies">Privacy Policy</Link>
             </div>
           </div>
         </div>

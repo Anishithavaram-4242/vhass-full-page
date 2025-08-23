@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { Button } from "../../components/ui2/button"
 import { Input } from "../../components/ui2/input"
@@ -10,138 +10,80 @@ import Navbar from "../../components/navbar"
 import { useAuth } from "../../context/AuthContext.jsx"
 import phonepeService from "../../services/phonepeService.js"
 
-const workshopData = {
-  "certified-ethical-hacker-ceh": {
-    id: 1,
-    title: "Certified Ethical Hacker (CEH)",
-    instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration: 28 hours",
-    price: "₹25000",
-    image: "/images/circuit-board.png",
-    about: "The Certified Ethical Hacker (CEH) workshop provides hands-on training in ethical hacking techniques. Learn to identify vulnerabilities, perform penetration testing, and secure systems against cyber threats.",
-    syllabus: [
-      "Introduction to Ethical Hacking",
-      "Footprinting and Reconnaissance",
-      "Scanning Networks",
-      "Enumeration",
-      "Vulnerability Analysis",
-      "Malware Threats",
-      "Hacking Web Applications"
-    ],
-    whoShouldAttend: [
-      "Security Officers",
-      "Auditors",
-      "Security Professionals",
-      "Network Administrators",
-      "IT professionals preparing for CEH certification"
-    ],
-    prerequisites: [
-      "Basic computer knowledge",
-      "Understanding of networking concepts",
-      "Laptop with i5 processor and 8GB RAM"
-    ],
-  },
-  "awareness-of-cyber-crime-and-threats": {
-    id: 2,
-    title: "Awareness of Cyber Crime And Threats",
-    instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration: 20 hours",
-    price: "₹1000",
-    image: "/images/robot-desk.png",
-    about: "This workshop provides essential knowledge about cyber threats and how to protect yourself and your organization from cyber attacks.",
-    syllabus: [
-      "Understanding Cyber Crime",
-      "Phishing & Social Engineering",
-      "Malware Threats",
-      "Online Financial Safety",
-      "Social Media & Privacy",
-      "Workplace Security"
-    ],
-    whoShouldAttend: [
-      "Individual internet users",
-      "Employees in any industry",
-      "Small business owners",
-      "Students and community leaders"
-    ],
-    prerequisites: [
-      "No technical knowledge required",
-      "Basic computer/phone usage skills",
-      "Interest in staying safe online"
-    ],
-  },
-  "cyber-suraksha-30-day-cybersecurity-empowerment-for-small-businesses": {
-    id: 3,
-    title: "Cyber Suraksha – 30-Day Cybersecurity Empowerment for Small Businesses",
-    instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration: 45 hours",
-    price: "₹8000",
-    image: "/images/business-gears.png",
-    about: "A comprehensive 30-day program designed to empower small businesses with practical cybersecurity knowledge and tools.",
-    syllabus: [
-      "Week 1: Basics & Awareness",
-      "Week 2: Threat Prevention",
-      "Week 3: Business-Level Security",
-      "Week 4: Recovery, Tools & Certification"
-    ],
-    whoShouldAttend: [
-      "Small business owners",
-      "Managers and staff",
-      "Finance and HR teams",
-      "Anyone supporting digital businesses"
-    ],
-    prerequisites: [
-      "No technical background required",
-      "Basic computer skills",
-      "Stable internet connection",
-      "Access to laptop or desktop"
-    ],
-  },
-  "zero-to-founder-entrepreneurship-edition-full-course-for-beginners": {
-    id: 4,
-    title: "Zero to Founder (Entrepreneurship Edition - Full Course For beginners)",
-    instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
-    duration: "Duration: 40 hours",
-    price: "₹12999",
-    image: "/images/entrepreneurship.png",
-    about: "A practical workshop designed to guide you from idea to launch. Learn entrepreneurship fundamentals and build real startups with confidence.",
-    syllabus: [
-      "Foundation of Entrepreneurship",
-      "Startup Ideation & Validation",
-      "Building the Team & MVP",
-      "Fundraising & Revenue Models",
-      "Marketing & Launching",
-      "Scaling Your Startup",
-      "Legal, Ethics & Culture"
-    ],
-    whoShouldAttend: [
-      "Students curious about startups",
-      "Aspiring entrepreneurs",
-      "Techies/Developers",
-      "Designers/Creators",
-      "Hackathon Participants"
-    ],
-    prerequisites: [
-      "Curiosity to learn",
-      "Basic digital skills",
-      "Smartphone or laptop",
-      "1 hour/day commitment"
-    ],
-  },
-}
+// Helper function to construct proper image URL
+const getImageUrl = (imagePath) => {
+  // Handle null, undefined, or empty strings
+  if (!imagePath || imagePath === 'null' || imagePath === 'undefined') {
+    return "/images/circuit-board.png";
+  }
+  
+  // If it's already a full URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it's a filename (no slashes), construct the uploads URL
+  if (!imagePath.includes('/')) {
+    return `/uploads/${imagePath}`;
+  }
+  
+  // If it's a relative path starting with uploads/, return as is
+  if (imagePath.startsWith('uploads/')) {
+    return `/${imagePath}`;
+  }
+  
+  // If it's already a relative path starting with /uploads/, return as is
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  
+  // If it's a relative path, return as is
+  return imagePath;
+};
 
-export default function WorkshopDetailsPage() {
+// No static data; fetch from backend
+
+export default function WorkshopDetailPage() {
   const { slug } = useParams()
   const navigate = useNavigate()
   const { user } = useAuth()
   const [showEnrollmentModal, setShowEnrollmentModal] = useState(false)
   const [isProcessingPayment, setIsProcessingPayment] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [workshop, setWorkshop] = useState(null)
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
     mobile: user?.phone || "",
   })
 
-  const workshop = workshopData[slug]
+  useEffect(() => {
+    const API = import.meta.env.VITE_API_URL || '/api'
+    const load = async () => {
+      try {
+        const res = await fetch(`${API}/workshop/${slug}`, { credentials: 'include' })
+        if (!res.ok) throw new Error('Failed to load workshop')
+        const data = await res.json()
+        setWorkshop(data.workshop)
+      } catch (e) {
+        console.error('Failed to fetch workshop:', e)
+      } finally {
+        setLoading(false)
+      }
+    }
+    if (slug) load()
+  }, [slug])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Navbar />
+        <div className="container mx-auto px-4 py-8 text-center">
+          <h1 className="text-2xl font-bold" style={{ color: "#FFFFF0" }}>Loading...</h1>
+        </div>
+      </div>
+    )
+  }
 
   if (!workshop) {
     return (
@@ -263,16 +205,16 @@ export default function WorkshopDetailsPage() {
           </h1>
           <div className="max-w-4xl mx-auto mb-8">
             <img
-              src={workshop.image || "/placeholder.svg"}
+              src={getImageUrl(workshop.image)}
               alt={workshop.title}
               className="w-full h-64 md:h-80 object-cover rounded-2xl shadow-xl"
             />
           </div>
           <div className="flex flex-wrap justify-center items-center gap-8 text-lg">
-            <span style={{ color: "#B88AFF" }}>{workshop.instructor}</span>
-            <span style={{ color: "#B88AFF" }}>{workshop.duration}</span>
+            <span style={{ color: "#B88AFF" }}>{workshop.createdBy || workshop.instructor}</span>
+            <span style={{ color: "#B88AFF" }}>{`Duration: ${workshop.duration} hours`}</span>
             <span className="text-3xl font-bold" style={{ color: "#FFFFF0" }}>
-              {workshop.price}
+              {`₹${workshop.price}`}
             </span>
           </div>
         </div>
@@ -293,7 +235,7 @@ export default function WorkshopDetailsPage() {
             Workshop Syllabus
           </h2>
           <div className="space-y-4">
-            {workshop.syllabus.map((item, index) => (
+            {(workshop.syllabus || []).map((item, index) => (
               <div key={index} className="p-4 rounded-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
                 <p className="text-lg" style={{ color: "#B88AFF" }}>
                   {item}
@@ -309,7 +251,7 @@ export default function WorkshopDetailsPage() {
             Who Should Attend
           </h2>
           <div className="space-y-4">
-            {workshop.whoShouldAttend.map((item, index) => (
+            {(workshop.whoShouldAttend || []).map((item, index) => (
               <div key={index} className="p-4 rounded-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
                 <p className="text-lg" style={{ color: "#B88AFF" }}>
                   {item}
@@ -325,7 +267,7 @@ export default function WorkshopDetailsPage() {
             Prerequisites
           </h2>
           <div className="space-y-4">
-            {workshop.prerequisites.map((item, index) => (
+            {(workshop.prerequisites || []).map((item, index) => (
               <div key={index} className="p-4 rounded-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.05)" }}>
                 <p className="text-lg" style={{ color: "#B88AFF" }}>
                   {item}
@@ -342,7 +284,7 @@ export default function WorkshopDetailsPage() {
             className="px-8 py-4 text-xl"
             style={{ backgroundColor: "#B88AFF", color: "#FFFFF0" }}
           >
-            {user ? `Enroll in Workshop - ${workshop.price}` : "Login to Enroll"}
+            {user ? `Enroll in Workshop - ₹${workshop.price}` : "Login to Enroll"}
           </Button>
         </div>
       </main>

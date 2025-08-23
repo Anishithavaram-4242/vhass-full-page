@@ -11,6 +11,37 @@ import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram, ArrowLeft, X, Plus, 
 import Navbar from "./navbar"
 import { useAuth } from "../context/AuthContext.jsx"
 
+// Helper function to construct proper image URL
+const getImageUrl = (imagePath) => {
+  // Handle null, undefined, or empty strings
+  if (!imagePath || imagePath === 'null' || imagePath === 'undefined') {
+    return "/images/circuit-board.png";
+  }
+  
+  // If it's already a full URL (starts with http/https), return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+  
+  // If it's a filename (no slashes), construct the uploads URL
+  if (!imagePath.includes('/')) {
+    return `/uploads/${imagePath}`;
+  }
+  
+  // If it's a relative path starting with uploads/, return as is
+  if (imagePath.startsWith('uploads/')) {
+    return `/${imagePath}`;
+  }
+  
+  // If it's already a relative path starting with /uploads/, return as is
+  if (imagePath.startsWith('/uploads/')) {
+    return imagePath;
+  }
+  
+  // If it's a relative path, return as is
+  return imagePath;
+};
+
 export default function AdminDashboard() {
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -23,6 +54,7 @@ export default function AdminDashboard() {
   const [showAddCourse, setShowAddCourse] = useState(false)
   const [showAddWorkshop, setShowAddWorkshop] = useState(false)
   const [editingItem, setEditingItem] = useState(null)
+  const [isEditing, setIsEditing] = useState(false)
 
   // Form states
   const [userForm, setUserForm] = useState({
@@ -37,24 +69,24 @@ export default function AdminDashboard() {
     instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
     duration: "",
     price: "",
-    image: "/images/circuit-board.png",
     about: "",
     syllabus: [""],
     whoShouldAttend: [""],
     prerequisites: [""]
   })
+  const [courseImage, setCourseImage] = useState(null)
 
   const [workshopForm, setWorkshopForm] = useState({
     title: "",
     instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
     duration: "",
     price: "",
-    image: "/images/circuit-board.png",
     about: "",
     syllabus: [""],
     whoShouldAttend: [""],
     prerequisites: [""]
   })
+  const [workshopImage, setWorkshopImage] = useState(null)
 
   useEffect(() => {
     if (!user || user.role !== 'admin') {
@@ -119,61 +151,221 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleEditCourse = (course) => {
+    setEditingItem({ type: 'course', data: course })
+    setCourseForm({
+      title: course.title || "",
+      instructor: course.createdBy || course.instructor || "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
+      duration: course.duration || "",
+      price: course.price || "",
+      about: course.description || course.about || "",
+      syllabus: course.syllabus || [""],
+      whoShouldAttend: course.whoShouldAttend || [""],
+      prerequisites: course.prerequisites || [""]
+    })
+    setCourseImage(null)
+    setIsEditing(true)
+    setShowAddCourse(true)
+  }
+
+  const handleEditWorkshop = (workshop) => {
+    setEditingItem({ type: 'workshop', data: workshop })
+    setWorkshopForm({
+      title: workshop.title || "",
+      instructor: workshop.createdBy || workshop.instructor || "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
+      duration: workshop.duration || "",
+      price: workshop.price || "",
+      about: workshop.description || workshop.about || "",
+      syllabus: workshop.syllabus || [""],
+      whoShouldAttend: workshop.whoShouldAttend || [""],
+      prerequisites: workshop.prerequisites || [""]
+    })
+    setWorkshopImage(null)
+    setIsEditing(true)
+    setShowAddWorkshop(true)
+  }
+
   const handleAddCourse = async (e) => {
     e.preventDefault()
+    
+    // Validate required fields
+    if (!courseForm.title.trim()) {
+      alert('Please enter a course title')
+      return
+    }
+    if (!courseForm.about.trim()) {
+      alert('Please enter a course description')
+      return
+    }
+    if (!courseForm.instructor.trim()) {
+      alert('Please enter an instructor name')
+      return
+    }
+    
+    // Validate numeric fields
+    const duration = parseFloat(courseForm.duration)
+    const price = parseFloat(courseForm.price)
+    
+    if (isNaN(duration) || duration < 0) {
+      alert('Please enter a valid duration (number of hours)')
+      return
+    }
+    if (isNaN(price) || price < 0) {
+      alert('Please enter a valid price')
+      return
+    }
+    
     try {
-      const response = await fetch('/api/admin/course', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const formData = new FormData()
+      formData.append('title', courseForm.title.trim())
+      formData.append('description', courseForm.about.trim())
+      formData.append('createdBy', courseForm.instructor.trim())
+      formData.append('duration', duration.toString())
+      formData.append('price', price.toString())
+      formData.append('category', 'General')
+      formData.append('syllabus', JSON.stringify(courseForm.syllabus))
+      formData.append('whoShouldAttend', JSON.stringify(courseForm.whoShouldAttend))
+      formData.append('prerequisites', JSON.stringify(courseForm.prerequisites))
+      
+      if (courseImage) {
+        console.log('Adding course image:', courseImage.name, courseImage.type, courseImage.size)
+        formData.append('image', courseImage)
+      } else {
+        console.log('No course image provided')
+      }
+
+      const url = isEditing ? `/api/admin/course/${editingItem.data._id}` : '/api/admin/course'
+      const method = isEditing ? 'PUT' : 'POST'
+
+      console.log('Sending course data to:', url, 'with method:', method)
+      console.log('FormData contents:')
+      for (let [key, value] of formData.entries()) {
+        console.log(key, ':', value)
+      }
+
+      const response = await fetch(url, {
+        method,
         credentials: 'include',
-        body: JSON.stringify(courseForm)
+        body: formData
       })
+      
+      console.log('Course creation response status:', response.status)
+      const responseData = await response.json()
+      console.log('Course creation response:', responseData)
+      
       if (response.ok) {
         setShowAddCourse(false)
+        setIsEditing(false)
+        setEditingItem(null)
         setCourseForm({
           title: "",
           instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
           duration: "",
           price: "",
-          image: "/images/circuit-board.png",
           about: "",
           syllabus: [""],
           whoShouldAttend: [""],
           prerequisites: [""]
         })
+        setCourseImage(null)
         loadData()
+        alert('Course created successfully!')
+      } else {
+        // Show error message to user
+        const errorMessage = responseData.message || 'Failed to create course'
+        alert(`Error: ${errorMessage}`)
       }
     } catch (error) {
-      console.error('Error adding course:', error)
+      console.error('Error adding/editing course:', error)
+      alert('An error occurred while creating the course. Please try again.')
     }
   }
 
   const handleAddWorkshop = async (e) => {
     e.preventDefault()
+    
+    // Validate required fields
+    if (!workshopForm.title.trim()) {
+      alert('Please enter a workshop title')
+      return
+    }
+    if (!workshopForm.about.trim()) {
+      alert('Please enter a workshop description')
+      return
+    }
+    if (!workshopForm.instructor.trim()) {
+      alert('Please enter an instructor name')
+      return
+    }
+    
+    // Validate numeric fields
+    const duration = parseFloat(workshopForm.duration)
+    const price = parseFloat(workshopForm.price)
+    
+    if (isNaN(duration) || duration < 0) {
+      alert('Please enter a valid duration (number of hours)')
+      return
+    }
+    if (isNaN(price) || price < 0) {
+      alert('Please enter a valid price')
+      return
+    }
+    
     try {
-      const response = await fetch('/api/admin/workshop', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const formData = new FormData()
+      formData.append('title', workshopForm.title.trim())
+      formData.append('description', workshopForm.about.trim())
+      formData.append('createdBy', workshopForm.instructor.trim())
+      formData.append('duration', duration.toString())
+      formData.append('price', price.toString())
+      formData.append('category', 'General')
+      formData.append('date', new Date().toISOString())
+      formData.append('time', '00:00')
+      formData.append('location', 'Online')
+      formData.append('syllabus', JSON.stringify(workshopForm.syllabus))
+      formData.append('whoShouldAttend', JSON.stringify(workshopForm.whoShouldAttend))
+      formData.append('prerequisites', JSON.stringify(workshopForm.prerequisites))
+      
+      if (workshopImage) {
+        formData.append('image', workshopImage)
+      }
+
+      const url = isEditing ? `/api/admin/workshop/${editingItem.data._id}` : '/api/admin/workshop'
+      const method = isEditing ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method,
         credentials: 'include',
-        body: JSON.stringify(workshopForm)
+        body: formData
       })
+      
+      const responseData = await response.json()
+      
       if (response.ok) {
         setShowAddWorkshop(false)
+        setIsEditing(false)
+        setEditingItem(null)
         setWorkshopForm({
           title: "",
           instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
           duration: "",
           price: "",
-          image: "/images/circuit-board.png",
           about: "",
           syllabus: [""],
           whoShouldAttend: [""],
           prerequisites: [""]
         })
+        setWorkshopImage(null)
         loadData()
+        alert('Workshop created successfully!')
+      } else {
+        // Show error message to user
+        const errorMessage = responseData.message || 'Failed to create workshop'
+        alert(`Error: ${errorMessage}`)
       }
     } catch (error) {
-      console.error('Error adding workshop:', error)
+      console.error('Error adding/editing workshop:', error)
+      alert('An error occurred while creating the workshop. Please try again.')
     }
   }
 
@@ -293,6 +485,35 @@ export default function AdminDashboard() {
         [field]: prev[field].filter((_, i) => i !== index)
       }))
     }
+  }
+
+  const handleCancelEdit = () => {
+    setShowAddCourse(false)
+    setShowAddWorkshop(false)
+    setIsEditing(false)
+    setEditingItem(null)
+    setCourseForm({
+      title: "",
+      instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
+      duration: "",
+      price: "",
+      about: "",
+      syllabus: [""],
+      whoShouldAttend: [""],
+      prerequisites: [""]
+    })
+    setWorkshopForm({
+      title: "",
+      instructor: "Instructor: VHASS SOFTWARES PRIVATE LIMITED",
+      duration: "",
+      price: "",
+      about: "",
+      syllabus: [""],
+      whoShouldAttend: [""],
+      prerequisites: [""]
+    })
+    setCourseImage(null)
+    setWorkshopImage(null)
   }
 
   if (!user || user.role !== 'admin') {
@@ -439,7 +660,11 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-bold" style={{ color: "#FFFFF0" }}>Manage Courses</h2>
               <Button
-                onClick={() => setShowAddCourse(true)}
+                onClick={() => {
+                  setIsEditing(false)
+                  setEditingItem(null)
+                  setShowAddCourse(true)
+                }}
                 className="px-4 py-2"
                 style={{ backgroundColor: "#B88AFF", color: "#000000" }}
               >
@@ -452,9 +677,13 @@ export default function AdminDashboard() {
               {courses.map((course) => (
                 <Card key={course._id} className="overflow-hidden" style={{ backgroundColor: "rgba(0, 0, 0, 0.8)", border: "2px solid #B88AFF" }}>
                   <img
-                    src={course.image || "/images/circuit-board.png"}
+                    src={getImageUrl(course.image)}
                     alt={course.title}
                     className="w-full h-48 object-cover"
+                    onError={(e) => {
+                      console.error('Image failed to load:', course.title, getImageUrl(course.image))
+                      e.target.src = "/images/circuit-board.png"
+                    }}
                   />
                   <CardContent className="p-4">
                     <h3 className="text-lg font-semibold mb-2" style={{ color: "#FFFFF0" }}>{course.title}</h3>
@@ -463,7 +692,7 @@ export default function AdminDashboard() {
                     <p className="text-xl font-bold mb-4" style={{ color: "#B88AFF" }}>{course.price}</p>
                     <div className="flex gap-2">
                       <Button
-                        onClick={() => setEditingItem({ type: 'course', data: course })}
+                        onClick={() => handleEditCourse(course)}
                         className="flex-1 px-3 py-1"
                         style={{ backgroundColor: "#3b82f6", color: "#ffffff" }}
                       >
@@ -491,7 +720,11 @@ export default function AdminDashboard() {
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-3xl font-bold" style={{ color: "#FFFFF0" }}>Manage Workshops</h2>
               <Button
-                onClick={() => setShowAddWorkshop(true)}
+                onClick={() => {
+                  setIsEditing(false)
+                  setEditingItem(null)
+                  setShowAddWorkshop(true)
+                }}
                 className="px-4 py-2"
                 style={{ backgroundColor: "#B88AFF", color: "#000000" }}
               >
@@ -504,9 +737,13 @@ export default function AdminDashboard() {
               {workshops.map((workshop) => (
                 <Card key={workshop._id} className="overflow-hidden" style={{ backgroundColor: "rgba(0, 0, 0, 0.8)", border: "2px solid #B88AFF" }}>
                   <img
-                    src={workshop.image || "/images/circuit-board.png"}
+                    src={getImageUrl(workshop.image)}
                     alt={workshop.title}
                     className="w-full h-48 object-cover"
+                    onError={(e) => {
+                      console.error('Image failed to load:', workshop.title, getImageUrl(workshop.image))
+                      e.target.src = "/images/circuit-board.png"
+                    }}
                   />
                   <CardContent className="p-4">
                     <h3 className="text-lg font-semibold mb-2" style={{ color: "#FFFFF0" }}>{workshop.title}</h3>
@@ -515,7 +752,7 @@ export default function AdminDashboard() {
                     <p className="text-xl font-bold mb-4" style={{ color: "#B88AFF" }}>{workshop.price}</p>
                     <div className="flex gap-2">
                       <Button
-                        onClick={() => setEditingItem({ type: 'workshop', data: workshop })}
+                        onClick={() => handleEditWorkshop(workshop)}
                         className="flex-1 px-3 py-1"
                         style={{ backgroundColor: "#3b82f6", color: "#ffffff" }}
                       >
@@ -626,9 +863,11 @@ export default function AdminDashboard() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full border-2 border-purple-500 max-h-screen overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold" style={{ color: "#FFFFF0" }}>Add New Course</h2>
+                <h2 className="text-2xl font-bold" style={{ color: "#FFFFF0" }}>
+                  {isEditing ? "Edit Course" : "Add New Course"}
+                </h2>
                 <button
-                  onClick={() => setShowAddCourse(false)}
+                  onClick={handleCancelEdit}
                   className="text-gray-400 hover:text-white"
                 >
                   <X size={24} />
@@ -671,14 +910,20 @@ export default function AdminDashboard() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="image" className="text-lg" style={{ color: "#B88AFF" }}>Image URL</Label>
+                    <Label htmlFor="course-image" className="text-lg" style={{ color: "#B88AFF" }}>Course Image</Label>
                     <Input
-                      id="image"
-                      value={courseForm.image}
-                      onChange={(e) => setCourseForm({...courseForm, image: e.target.value})}
+                      id="course-image"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setCourseImage(e.target.files[0])}
                       className="mt-2"
                       style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", border: "1px solid #B88AFF", color: "#FFFFF0" }}
                     />
+                    {courseImage && (
+                      <p className="text-sm mt-1" style={{ color: "#B88AFF" }}>
+                        Selected: {courseImage.name}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -797,12 +1042,12 @@ export default function AdminDashboard() {
                     className="flex-1"
                     style={{ backgroundColor: "#B88AFF", color: "#FFFFF0" }}
                   >
-                    Add Course
+                    {isEditing ? "Update Course" : "Add Course"}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setShowAddCourse(false)}
+                    onClick={handleCancelEdit}
                     style={{ borderColor: "#B88AFF", color: "#B88AFF" }}
                   >
                     Cancel
@@ -818,9 +1063,11 @@ export default function AdminDashboard() {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="bg-gray-900 rounded-2xl p-8 max-w-4xl w-full border-2 border-purple-500 max-h-screen overflow-y-auto">
               <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold" style={{ color: "#FFFFF0" }}>Add New Workshop</h2>
+                <h2 className="text-2xl font-bold" style={{ color: "#FFFFF0" }}>
+                  {isEditing ? "Edit Workshop" : "Add New Workshop"}
+                </h2>
                 <button
-                  onClick={() => setShowAddWorkshop(false)}
+                  onClick={handleCancelEdit}
                   className="text-gray-400 hover:text-white"
                 >
                   <X size={24} />
@@ -863,14 +1110,20 @@ export default function AdminDashboard() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="workshop-image" className="text-lg" style={{ color: "#B88AFF" }}>Image URL</Label>
+                    <Label htmlFor="workshop-image-file" className="text-lg" style={{ color: "#B88AFF" }}>Workshop Image</Label>
                     <Input
-                      id="workshop-image"
-                      value={workshopForm.image}
-                      onChange={(e) => setWorkshopForm({...workshopForm, image: e.target.value})}
+                      id="workshop-image-file"
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => setWorkshopImage(e.target.files[0])}
                       className="mt-2"
                       style={{ backgroundColor: "rgba(255, 255, 255, 0.1)", border: "1px solid #B88AFF", color: "#FFFFF0" }}
                     />
+                    {workshopImage && (
+                      <p className="text-sm mt-1" style={{ color: "#B88AFF" }}>
+                        Selected: {workshopImage.name}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -989,12 +1242,12 @@ export default function AdminDashboard() {
                     className="flex-1"
                     style={{ backgroundColor: "#B88AFF", color: "#FFFFF0" }}
                   >
-                    Add Workshop
+                    {isEditing ? "Update Workshop" : "Add Workshop"}
                   </Button>
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => setShowAddWorkshop(false)}
+                    onClick={handleCancelEdit}
                     style={{ borderColor: "#B88AFF", color: "#B88AFF" }}
                   >
                     Cancel

@@ -4,6 +4,7 @@ import api from "../services/api"
 import { useNavigate } from "react-router-dom"
 import { useState } from "react"
 import Navbar from "../Components/navbar";
+import Footer from "../Components/footer";
 import "../App.css"
 
 export default function HelpDeskPage() {
@@ -159,7 +160,7 @@ Frequently Asked Questions</h1>
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
-                <span>info@vhass.in</span>
+                <span>info@vhassacademy.com</span>
               </div>
               <div className="flex items-center gap-3">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -182,7 +183,7 @@ Frequently Asked Questions</h1>
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="Your name"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-500"
                   required
                 />
               </div>
@@ -194,7 +195,7 @@ Frequently Asked Questions</h1>
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Your email"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-500"
                   required
                 />
               </div>
@@ -206,7 +207,7 @@ Frequently Asked Questions</h1>
                   onChange={handleInputChange}
                   placeholder="Your question"
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800 placeholder-gray-500"
                   required
                 />
               </div>
@@ -224,116 +225,7 @@ Frequently Asked Questions</h1>
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-gray-800 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8">
-            {/* Company Info */}
-            <div>
-              <div className="flex items-center gap-3 mb-4">
-                <img src="/VHASS.png" alt="VHASS Logo" className="w-12 h-12" />
-                <h3 className="text-xl font-bold">VHASS</h3>
-              </div>
-              <p className="text-gray-300 text-sm">
-                Empowering the digital world with cutting-edge cybersecurity education and solutions.
-              </p>
-            </div>
-
-            {/* Quick Links */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="/" className="text-gray-300 hover:text-white transition-colors">
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a href="/courses" className="text-gray-300 hover:text-white transition-colors">
-                    Courses
-                  </a>
-                </li>
-                <li>
-                  <a href="/workshop" className="text-gray-300 hover:text-white transition-colors">
-                    WorkShop
-                  </a>
-                </li>
-                <li>
-                  <a href="/entrepreneur" className="text-gray-300 hover:text-white transition-colors">
-                    Entrepreneur
-                  </a>
-                </li>
-                <li>
-                  <a href="/about" className="text-gray-300 hover:text-white transition-colors">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="/helpdesk" className="text-gray-300 hover:text-white transition-colors">
-                    HelpDesk
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Courses */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Courses</h4>
-              <ul className="space-y-2 text-sm">
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                    Ethical Hacking
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                    Bounty Hunting
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                    Awareness of Cyber Crime
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                    Cyber Security for Beginners
-                  </a>
-                </li>
-                <li>
-                  <a href="#" className="text-gray-300 hover:text-white transition-colors">
-                    Entrepreneurship for Beginners
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Contact Us */}
-            <div>
-              <h4 className="text-lg font-semibold mb-4">Contact Us</h4>
-              <div className="space-y-2 text-sm text-gray-300">
-                <p>92-1-70, Brillanta School Area,</p>
-                <p>Ibrahimpatnam Krishna - 521 456</p>
-                <p>Andhra Pradesh</p>
-                <p className="flex items-center gap-2 mt-3">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
-                  </svg>
-                  +91 8985820226
-                </p>
-                <p className="flex items-center gap-2">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-                  </svg>
-                  info@vhass.in
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   )
 }
