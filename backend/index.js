@@ -195,6 +195,11 @@ app.use('/uploads', (req, res) => {
 
 // Connect to MongoDB with environment-aware options
 const mongoUri = process.env.MONGODB_URI;
+console.log('🔍 MongoDB URI check:');
+console.log('MONGODB_URI exists:', !!process.env.MONGODB_URI);
+console.log('MONGODB_URI value:', process.env.MONGODB_URI ? process.env.MONGODB_URI.replace(/:([^:@]+)@/, ':****@') : 'NOT SET');
+console.log('NODE_ENV:', process.env.NODE_ENV);
+
 const isLocalMongo = /^mongodb:\/\/(localhost|127\.0\.0\.1)/.test(mongoUri || '');
 
 const connectionOptions = {
@@ -204,6 +209,11 @@ const connectionOptions = {
   // Avoid forcing TLS/SSL for local development
   ...(isLocalMongo ? {} : {}),
 };
+
+if (!mongoUri) {
+  console.error('❌ MONGODB_URI environment variable is not set!');
+  process.exit(1);
+}
 
 mongoose.connect(mongoUri, connectionOptions)
   .then(() => {
