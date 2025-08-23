@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
-import { Button } from "../../Components/ui2/button"
-import { Input } from "../../Components/ui2/input"
-import { Label } from "../../Components/ui2/label"
+import { Button } from "@/Components/ui2/button"
+import { Input } from "@/Components/ui2/input"
+import { Label } from "@/Components/ui2/label"
 import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram, ArrowLeft, X } from "lucide-react"
-import Navbar from "../../Components/navbar"
+import Navbar from "@/Components/navbar"
 import { useAuth } from "../../context/AuthContext.jsx"
 import phonepeService from "../../services/phonepeService.js"
 
