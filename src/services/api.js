@@ -192,7 +192,7 @@ class ApiService {
   // Google OAuth
   getGoogleAuthUrl() {
     // Use API base and append /auth/google so it hits /api/auth/google
-    return `${API_BASE_URL}/auth/google`;
+    return `${API_BASE_URL}/api/auth/google`;
   }
 
   // Health check
