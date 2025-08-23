@@ -1,13 +1,21 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
+// Debug logging
+console.log('🔍 API Configuration:');
+console.log('VITE_API_URL:', import.meta.env.VITE_API_URL);
+console.log('API_BASE_URL:', API_BASE_URL);
+console.log('Environment:', import.meta.env.MODE);
+
 class ApiService {
   constructor() {
     this.baseURL = API_BASE_URL;
+    console.log('🚀 ApiService initialized with baseURL:', this.baseURL);
   }
 
   // Helper method to make API calls
   async makeRequest(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
+    console.log('🌐 Making API request to:', url);
     const config = {
       headers: {
         'Content-Type': 'application/json',
