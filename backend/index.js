@@ -126,6 +126,12 @@ app.get("/", (req, res) => {
   res.send("Server is working");
 });
 
+// Redirect from /auth/google to /api/auth/google for compatibility
+app.get('/auth/google', (req, res) => {
+  console.log('Redirecting from /auth/google to /api/auth/google');
+  res.redirect('/api/auth/google');
+});
+
 // Serve static files from the uploads directory
 const uploadsPath = path.join(__dirname, 'uploads');
 console.log('Uploads directory path:', uploadsPath); // Debug log
