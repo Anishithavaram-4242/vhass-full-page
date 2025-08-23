@@ -11,6 +11,12 @@ router.use((req, res, next) => {
   next();
 });
 
+// Redirect from /auth/google to /api/auth/google for compatibility
+router.get('/auth/google', (req, res) => {
+  console.log('Redirecting from /auth/google to /api/auth/google');
+  res.redirect('/api/auth/google');
+});
+
 // Google OAuth routes
 router.get('/google',
   (req, res, next) => {
