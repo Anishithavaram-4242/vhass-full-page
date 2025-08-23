@@ -1,6 +1,6 @@
 import React from 'react';
 import Navbar from './Components/navbar.jsx';
-import './CybersecurityPage.css';
+import './Cybersecuritypage.css';
 import Footer from './Components/footer.jsx';
 function CybersecurityPage() {
   return (
