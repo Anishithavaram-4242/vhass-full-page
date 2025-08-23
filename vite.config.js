@@ -38,6 +38,10 @@ export default defineConfig(({ command }) => {
     },
     define: {
       global: 'globalThis',
+    },
+    // Vercel specific optimizations
+    optimizeDeps: {
+      include: ['react', 'react-dom']
     }
   }
 })
