@@ -62,6 +62,8 @@ app.use(cors({
       'https://api.vhass.in',
       'https://vhass-frontend.onrender.com',
       'https://vhass-backend.onrender.com',
+      'https://vhass-full.onrender.com',
+      'https://vhass-front.vercel.app',
       'http://localhost:5173',
       'http://localhost:5174',
       'http://localhost:3000',
