@@ -6,9 +6,8 @@ services:
     buildCommand: npm install
     startCommand: npm start
          envVars:
-       # MongoDB URI will be set in Render dashboard
-       # - key: MONGODB_URI
-       #   value: mongodb+srv://pramodh7860:pramodh786@cluster0.a0woy.mongodb.net/vhass?retryWrites=true&w=majority&appName=Cluster0
+       - key: MONGODB_URI
+         value: mongodb+srv://vhass0310:Uday_123@cluster0.zndptf0.mongodb.net/vhass?retryWrites=true&w=majority&appName=Cluster0
       - key: SESSION_SECRET
         value: vhass-super-secret-session-key-2024
       - key: JWT_SECRET

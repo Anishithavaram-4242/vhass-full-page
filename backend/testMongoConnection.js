@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 // Load environment variables
 dotenv.config({ path: './config.env.production' });
 
-const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://pramodh7860:pramodh786@cluster0.a0woy.mongodb.net/vhass?retryWrites=true&w=majority&appName=Cluster0';
+const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://vhass0310:Uday_123@cluster0.zndptf0.mongodb.net/vhass?retryWrites=true&w=majority&appName=Cluster0';
 
 console.log('Testing MongoDB connection...');
 console.log('MongoDB URI:', mongoUri.replace(/:([^:@]+)@/, ':****@'));
