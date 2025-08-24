@@ -59,10 +59,13 @@ class ApiService {
   }
 
   async login(credentials) {
-    return this.makeRequest('/api/user/login', {
+    console.log('🔐 Attempting login with credentials:', { email: credentials.email });
+    const response = await this.makeRequest('/api/user/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
+    console.log('🔐 Login response:', response);
+    return response;
   }
 
   async googleLogin(googleData) {
@@ -100,7 +103,10 @@ class ApiService {
   }
 
   async getProfile() {
-    return this.makeRequest('/api/user/me');
+    console.log('👤 Fetching user profile...');
+    const response = await this.makeRequest('/api/user/me');
+    console.log('👤 Profile response:', response);
+    return response;
   }
 
   async updateProfile(profileData) {

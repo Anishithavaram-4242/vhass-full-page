@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
         const response = await apiService.googleLogin(credentials);
         if (response.success) {
           setUser(response.user);
-          setTimeout(() => checkAuthStatus(), 100);
+          // Don't call checkAuthStatus immediately after login
           return { success: true };
         }
       } else {
@@ -74,11 +74,12 @@ export const AuthProvider = ({ children }) => {
         const response = await apiService.login(credentials);
         if (response.success) {
           setUser(response.user);
-          setTimeout(() => checkAuthStatus(), 100);
+          // Don't call checkAuthStatus immediately after login
           return { success: true };
         }
       }
     } catch (error) {
+      console.error('Login error:', error);
       return { success: false, error: error.message };
     }
   };
