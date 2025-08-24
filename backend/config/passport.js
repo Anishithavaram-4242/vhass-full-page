@@ -4,10 +4,10 @@ import { User } from '../models/User.js';
 
 const isProduction = process.env.NODE_ENV === 'production';
 const frontendUrl = isProduction
-  ? (process.env.FRONTEND_URL || 'https://www.vhass.in')
+  ? (process.env.FRONTEND_URL || 'https://vhass-front.vercel.app')
   : (process.env.FRONTEND_URL || 'http://localhost:5173');
 const backendUrl = isProduction
-  ? (process.env.BACKEND_URL || 'https://api.vhass.in')
+  ? (process.env.BACKEND_URL || 'https://vhass-full.onrender.com')
   : (process.env.BACKEND_URL || 'http://localhost:5001');
 
 // Google OAuth configuration
