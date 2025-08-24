@@ -119,9 +119,16 @@ export const verifyUser = TryCatch(async (req, res) => {
 });
 
 export const loginUser = TryCatch(async (req, res) => {
+  console.log('=== LOGIN ATTEMPT ===');
+  console.log('Login request body:', { email: req.body.email, password: req.body.password ? 'exists' : 'undefined' });
+  console.log('Login request headers:', req.headers);
+  console.log('Login request cookies:', req.cookies);
+  console.log('Login request session:', req.session);
+  
   const { email, password } = req.body;
 
   if (!email || !password) {
+    console.log('Login failed: Missing credentials');
     return res.status(400).json({
       message: "Please enter email and password",
       code: "MISSING_CREDENTIALS"
@@ -146,6 +153,8 @@ export const loginUser = TryCatch(async (req, res) => {
     });
   }
 
+  console.log('Login successful, setting session...');
+  
   // Set user in session for authentication
   req.session.user = {
     _id: user._id,
@@ -153,6 +162,8 @@ export const loginUser = TryCatch(async (req, res) => {
     name: user.name,
     role: user.role
   };
+
+  console.log('Session user set:', req.session.user);
 
   // Save session explicitly
   req.session.save((err) => {
@@ -166,6 +177,13 @@ export const loginUser = TryCatch(async (req, res) => {
     }
 
     console.log('Session saved successfully:', req.session.user);
+    console.log('Session ID:', req.session.id);
+    console.log('Response headers being set...');
+    
+    // Set additional headers for debugging
+    res.setHeader('X-Session-ID', req.session.id);
+    res.setHeader('X-User-ID', user._id);
+    
     return res.status(200).json({
       success: true,
       message: `Welcome back ${user.name}`,
