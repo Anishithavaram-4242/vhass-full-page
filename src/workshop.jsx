@@ -54,13 +54,11 @@ export default function VHASSWorkshopsPage() {
   })
 
   useEffect(() => {
-    const API = import.meta.env.VITE_API_URL || '/api'
-    // Fetch workshops from backend
+    // Fetch workshops from backend using API service
     const loadWorkshops = async () => {
       try {
-        const res = await fetch(`${API}/workshop/all`, { credentials: 'include' })
-        if (!res.ok) throw new Error('Failed to load workshops')
-        const data = await res.json()
+        const apiService = new (await import('./services/api.js')).default();
+        const data = await apiService.getAllWorkshops();
         const list = Array.isArray(data.workshops) ? data.workshops : []
         setWorkshops(list)
         // After a small delay, enable view details buttons

@@ -56,9 +56,8 @@ export default function VHASSCoursesPage() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await fetch('/api/course/all', { credentials: 'include' })
-        if (!res.ok) throw new Error('Failed to load courses')
-        const data = await res.json()
+        const apiService = new (await import('./services/api.js')).default();
+        const data = await apiService.getAllCourses();
         
         // Debug: Log the raw course data to see image values
         console.log('Raw course data:', data.courses?.map(c => ({ title: c.title, image: c.image })))
