@@ -1,5 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
-const CACHE_BUSTER = Date.now(); // Force cache invalidation
+const CACHE_BUSTER = Date.now() + Math.random(); // Force cache invalidation
 
 // Debug logging
 console.log('🔍 API Configuration:');
