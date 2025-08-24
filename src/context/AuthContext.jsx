@@ -16,12 +16,10 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [lastCheck, setLastCheck] = useState(0);
 
-  // Check if user is logged in on app start
   useEffect(() => {
     checkAuthStatus();
   }, []);
 
-  // Add event listener for storage changes (in case of multiple tabs)
   useEffect(() => {
     const handleStorageChange = () => {
       checkAuthStatus();
@@ -32,11 +30,8 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const checkAuthStatus = async () => {
-    // Debounce auth checks to prevent too many API calls
     const now = Date.now();
-    if (now - lastCheck < 1000) { // Only check once per second
-      return;
-    }
+    if (now - lastCheck < 1000) return;
     setLastCheck(now);
 
     try {
@@ -49,7 +44,6 @@ export const AuthProvider = ({ children }) => {
     } catch (error) {
       console.log('User not authenticated:', error.message);
       setUser(null);
-      // Don't show error for 401 responses as they're expected for unauthenticated users
       if (error.message !== 'Authentication required') {
         console.error('Auth check error:', error);
       }
@@ -60,24 +54,26 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      // Check if this is a Google login (has googleId)
+      let response;
+
       if (credentials.googleId) {
-        // Handle Google login
-        const response = await apiService.googleLogin(credentials);
-        if (response.success) {
-          setUser(response.user);
-          // Don't call checkAuthStatus immediately after login
-          return { success: true };
-        }
+        response = await apiService.googleLogin(credentials);
       } else {
-        // Handle regular email/password login
-        const response = await apiService.login(credentials);
-        if (response.success) {
-          setUser(response.user);
-          // Don't call checkAuthStatus immediately after login
-          return { success: true };
-        }
+        response = await apiService.login(credentials);
       }
+
+      if (response.success) {
+        setUser(response.user);
+
+        // ✅ Save token after login
+        if (response.token) {
+          localStorage.setItem('auth_token', response.token);
+        }
+
+        return { success: true };
+      }
+
+      return { success: false, error: response.message || 'Login failed' };
     } catch (error) {
       console.error('Login error:', error);
       return { success: false, error: error.message };
@@ -87,14 +83,12 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     try {
       await apiService.logout();
-      setUser(null);
-      // Clear any stored auth data
-      localStorage.removeItem('auth_token');
-      sessionStorage.removeItem('auth_token');
     } catch (error) {
       console.error('Logout error:', error);
-      // Even if logout fails, clear local state
+    } finally {
       setUser(null);
+      localStorage.removeItem('auth_token'); // ✅ clear token
+      sessionStorage.removeItem('auth_token');
     }
   };
 

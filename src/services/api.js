@@ -17,9 +17,14 @@ class ApiService {
   async makeRequest(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}?_cb=${CACHE_BUSTER}`;
     console.log('🌐 Making API request to:', url);
+    
+    // Get token from localStorage
+    const token = localStorage.getItem('auth_token');
+    
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        ...(token && { 'Authorization': `Bearer ${token}` }),
         ...options.headers,
       },
       credentials: 'include', // Include cookies for session management

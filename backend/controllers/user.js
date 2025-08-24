@@ -153,9 +153,21 @@ export const loginUser = TryCatch(async (req, res) => {
     });
   }
 
-  console.log('Login successful, setting session...');
+  console.log('Login successful, generating token...');
   
-  // Set user in session for authentication
+  // Generate JWT token
+  const token = jwt.sign(
+    {
+      _id: user._id,
+      email: user.email,
+      name: user.name,
+      role: user.role
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+  );
+
+  // Set user in session for backward compatibility
   req.session.user = {
     _id: user._id,
     email: user.email,
@@ -163,7 +175,7 @@ export const loginUser = TryCatch(async (req, res) => {
     role: user.role
   };
 
-  console.log('Session user set:', req.session.user);
+  console.log('Token generated and session set');
 
   // Save session explicitly
   req.session.save((err) => {
@@ -176,18 +188,18 @@ export const loginUser = TryCatch(async (req, res) => {
       });
     }
 
-    console.log('Session saved successfully:', req.session.user);
-    console.log('Session ID:', req.session.id);
-    console.log('Response headers being set...');
-    
-    // Set additional headers for debugging
-    res.setHeader('X-Session-ID', req.session.id);
-    res.setHeader('X-User-ID', user._id);
+    console.log('Session saved successfully');
     
     return res.status(200).json({
       success: true,
       message: `Welcome back ${user.name}`,
-      user: req.session.user,
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        role: user.role
+      },
+      token: token // ✅ Return JWT token
     });
   });
 });

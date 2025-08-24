@@ -1,17 +1,50 @@
 import { User } from "../models/User.js";
+import jwt from "jsonwebtoken";
 
 export const isAuth = async (req, res, next) => {
   try {
     console.log('=== AUTH CHECK START ===');
     console.log('Auth check - Session exists:', !!req.session);
     console.log('Auth check - Session user:', req.session?.user);
-    console.log('Auth check - Session ID:', req.session?.id);
-    console.log('Auth check - Cookies:', Object.keys(req.cookies || {}));
-    console.log('Auth check - User agent:', req.headers['user-agent']?.substring(0, 50));
-    console.log('Auth check - Origin:', req.headers.origin);
+    console.log('Auth check - Authorization header:', req.headers.authorization ? 'present' : 'missing');
     console.log('=== AUTH CHECK END ===');
 
-    // 1. Check for session-based login (Google/Passport)
+    // 1. Check for token-based authentication
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      const token = authHeader.substring(7);
+      console.log('Auth: Token-based authentication attempt');
+      
+      try {
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const user = await User.findById(decoded._id);
+        
+        if (!user) {
+          console.log('Auth: User not found in database');
+          return res.status(401).json({ 
+            message: "User not found",
+            code: "USER_NOT_FOUND"
+          });
+        }
+        
+        req.user = {
+          _id: user._id,
+          email: user.email,
+          name: user.name,
+          role: user.role
+        };
+        console.log('Auth: Token-based authentication successful:', req.user);
+        return next();
+      } catch (error) {
+        console.log('Auth: Token verification failed:', error.message);
+        return res.status(401).json({ 
+          message: "Invalid token",
+          code: "INVALID_TOKEN"
+        });
+      }
+    }
+
+    // 2. Check for session-based login (Google/Passport)
     if (req.session && req.session.user) {
       console.log('Auth: Session-based authentication successful');
       const user = await User.findById(req.session.user._id);
