@@ -9,6 +9,7 @@ import { Label } from "./Components/ui2/label"
 import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram } from "lucide-react"
 import Navbar from "./Components/navbar"
 import  Footer from "./Components/footer"
+import ApiService from "./services/api.js"
 
 // Helper function to construct proper image URL
 const getImageUrl = (imagePath) => {
@@ -57,7 +58,6 @@ export default function VHASSWorkshopsPage() {
     // Fetch workshops from backend using API service
     const loadWorkshops = async () => {
       try {
-        const { default: ApiService } = await import('./services/api.js');
         const apiService = new ApiService();
         const data = await apiService.getAllWorkshops();
         const list = Array.isArray(data.workshops) ? data.workshops : []

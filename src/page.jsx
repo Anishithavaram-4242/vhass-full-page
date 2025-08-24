@@ -9,6 +9,7 @@ import { Label } from "./Components/ui/label"
 import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram } from "lucide-react"
 import Navbar from "./Components/navbar"
 import Footer from "./Components/footer"
+import ApiService from "./services/api.js"
 
 // Helper function to construct proper image URL
 const getImageUrl = (imagePath) => {
@@ -56,7 +57,6 @@ export default function VHASSCoursesPage() {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const { default: ApiService } = await import('./services/api.js');
         const apiService = new ApiService();
         const data = await apiService.getAllCourses();
         
