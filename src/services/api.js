@@ -1,4 +1,5 @@
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const CACHE_BUSTER = Date.now(); // Force cache invalidation
 
 // Debug logging
 console.log('🔍 API Configuration:');
@@ -14,7 +15,7 @@ class ApiService {
 
   // Helper method to make API calls
   async makeRequest(endpoint, options = {}) {
-    const url = `${this.baseURL}${endpoint}`;
+    const url = `${this.baseURL}${endpoint}?_cb=${CACHE_BUSTER}`;
     console.log('🌐 Making API request to:', url);
     const config = {
       headers: {
