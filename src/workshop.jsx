@@ -57,7 +57,8 @@ export default function VHASSWorkshopsPage() {
     // Fetch workshops from backend using API service
     const loadWorkshops = async () => {
       try {
-        const apiService = new (await import('./services/api.js')).default();
+        const { default: ApiService } = await import('./services/api.js');
+        const apiService = new ApiService();
         const data = await apiService.getAllWorkshops();
         const list = Array.isArray(data.workshops) ? data.workshops : []
         setWorkshops(list)
