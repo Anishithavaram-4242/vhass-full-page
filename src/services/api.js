@@ -51,59 +51,59 @@ class ApiService {
 
   // Authentication APIs
   async register(userData) {
-    return this.makeRequest('/user/register', {
+    return this.makeRequest('/api/user/register', {
       method: 'POST',
       body: JSON.stringify(userData),
     });
   }
 
   async login(credentials) {
-    return this.makeRequest('/user/login', {
+    return this.makeRequest('/api/user/login', {
       method: 'POST',
       body: JSON.stringify(credentials),
     });
   }
 
   async googleLogin(googleData) {
-    return this.makeRequest('/user/google-login', {
+    return this.makeRequest('/api/user/google-login', {
       method: 'POST',
       body: JSON.stringify(googleData),
     });
   }
 
   async logout() {
-    return this.makeRequest('/user/logout', {
+    return this.makeRequest('/api/user/logout', {
       method: 'POST',
     });
   }
 
   async verifyUser(token) {
-    return this.makeRequest('/user/verify', {
+    return this.makeRequest('/api/user/verify', {
       method: 'POST',
       body: JSON.stringify({ token }),
     });
   }
 
   async forgotPassword(email) {
-    return this.makeRequest('/user/forgot', {
+    return this.makeRequest('/api/user/forgot', {
       method: 'POST',
       body: JSON.stringify({ email }),
     });
   }
 
   async resetPassword(token, newPassword) {
-    return this.makeRequest('/user/reset', {
+    return this.makeRequest('/api/user/reset', {
       method: 'POST',
       body: JSON.stringify({ token, password: newPassword }),
     });
   }
 
   async getProfile() {
-    return this.makeRequest('/user/me');
+    return this.makeRequest('/api/user/me');
   }
 
   async updateProfile(profileData) {
-    return this.makeRequest('/user/update', {
+    return this.makeRequest('/api/user/update', {
       method: 'PUT',
       body: JSON.stringify(profileData),
     });
@@ -111,64 +111,64 @@ class ApiService {
 
   // Course APIs
   async getAllCourses() {
-    return this.makeRequest('/course/all');
+    return this.makeRequest('/api/course/all');
   }
 
   async getCourse(courseId) {
-    return this.makeRequest(`/course/${courseId}`);
+    return this.makeRequest(`/api/course/${courseId}`);
   }
 
   async getMyCourses() {
-    return this.makeRequest('/mycourse');
+    return this.makeRequest('/api/mycourse');
   }
 
   async getUserCourses() {
-    return this.makeRequest('/user/courses');
+    return this.makeRequest('/api/user/courses');
   }
 
   async getLectures(courseId) {
-    return this.makeRequest(`/lectures/${courseId}`);
+    return this.makeRequest(`/api/lectures/${courseId}`);
   }
 
   async getLecture(lectureId) {
-    return this.makeRequest(`/lecture/${lectureId}`);
+    return this.makeRequest(`/api/lecture/${lectureId}`);
   }
 
   async addProgress(progressData) {
-    return this.makeRequest('/user/progress', {
+    return this.makeRequest('/api/user/progress', {
       method: 'POST',
       body: JSON.stringify(progressData),
     });
   }
 
   async getProgress() {
-    return this.makeRequest('/user/progress');
+    return this.makeRequest('/api/user/progress');
   }
 
   // Workshop APIs
   async getAllWorkshops() {
-    return this.makeRequest('/workshop/all');
+    return this.makeRequest('/api/workshop/all');
   }
 
   async getWorkshop(workshopId) {
-    return this.makeRequest(`/workshop/${workshopId}`);
+    return this.makeRequest(`/api/workshop/${workshopId}`);
   }
 
   async getMyWorkshops() {
-    return this.makeRequest('/myworkshop');
+    return this.makeRequest('/api/myworkshop');
   }
 
   async getUserWorkshops() {
-    return this.makeRequest('/user/workshops');
+    return this.makeRequest('/api/user/workshops');
   }
 
   async getEnrollmentHistory() {
-    return this.makeRequest('/user/enrollments');
+    return this.makeRequest('/api/user/enrollments');
   }
 
   // Contact
   async sendContactMessage(payload) {
-    return this.makeRequest('/contact', {
+    return this.makeRequest('/api/contact', {
       method: 'POST',
       body: JSON.stringify(payload),
     });
@@ -176,14 +176,14 @@ class ApiService {
 
   // Payment APIs
   async phonepeCheckout(type, id) {
-    const endpoint = type === 'course' ? `/course/phonepe/checkout/${id}` : `/workshop/phonepe/checkout/${id}`;
+    const endpoint = type === 'course' ? `/api/course/phonepe/checkout/${id}` : `/api/workshop/phonepe/checkout/${id}`;
     return this.makeRequest(endpoint, {
       method: 'POST',
     });
   }
 
   async phonepeStatus(type, transactionId) {
-    const endpoint = type === 'course' ? `/course/phonepe/status/${transactionId}` : `/workshop/phonepe/status/${transactionId}`;
+    const endpoint = type === 'course' ? `/api/course/phonepe/status/${transactionId}` : `/api/workshop/phonepe/status/${transactionId}`;
     return this.makeRequest(endpoint, {
       method: 'POST',
     });
