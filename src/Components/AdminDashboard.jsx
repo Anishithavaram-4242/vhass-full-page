@@ -99,7 +99,7 @@ export default function AdminDashboard() {
   const loadData = async () => {
     setLoading(true)
     try {
-      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const baseURL = import.meta.env.VITE_API_URL || 'https://api.vhassacademy.com'
       const token = localStorage.getItem('auth_token')
       
       // Load users
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
   const handleAddUser = async (e) => {
     e.preventDefault()
     try {
-      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const baseURL = import.meta.env.VITE_API_URL || 'https://api.vhassacademy.com'
       const token = localStorage.getItem('auth_token')
       
       const response = await fetch(`${baseURL}/api/admin/user`, {
@@ -261,7 +261,7 @@ export default function AdminDashboard() {
       }
 
       // Use the correct API base URL
-      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const baseURL = import.meta.env.VITE_API_URL || 'https://api.vhassacademy.com'
       const url = isEditing ? `${baseURL}/api/admin/course/${editingItem.data._id}` : `${baseURL}/api/admin/course`
       const method = isEditing ? 'PUT' : 'POST'
 
@@ -377,7 +377,7 @@ export default function AdminDashboard() {
       }
 
       // Use the correct API base URL
-      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const baseURL = import.meta.env.VITE_API_URL || 'https://api.vhassacademy.com'
       const url = isEditing ? `${baseURL}/api/admin/workshop/${editingItem.data._id}` : `${baseURL}/api/admin/workshop`
       const method = isEditing ? 'PUT' : 'POST'
 
@@ -437,7 +437,7 @@ export default function AdminDashboard() {
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+        const baseURL = import.meta.env.VITE_API_URL || 'https://api.vhassacademy.com'
         const token = localStorage.getItem('auth_token')
         
         const response = await fetch(`${baseURL}/api/admin/user/${userId}`, {
@@ -461,7 +461,7 @@ export default function AdminDashboard() {
   const handleDeleteCourse = async (courseId) => {
     if (window.confirm('Are you sure you want to delete this course?')) {
       try {
-        const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+        const baseURL = import.meta.env.VITE_API_URL || 'https://api.vhassacademy.com'
         const token = localStorage.getItem('auth_token')
         
         const response = await fetch(`${baseURL}/api/admin/course/${courseId}`, {
@@ -485,7 +485,7 @@ export default function AdminDashboard() {
   const handleDeleteWorkshop = async (workshopId) => {
     if (window.confirm('Are you sure you want to delete this workshop?')) {
       try {
-        const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+        const baseURL = import.meta.env.VITE_API_URL || 'https://api.vhassacademy.com'
         const token = localStorage.getItem('auth_token')
         
         const response = await fetch(`${baseURL}/api/admin/workshop/${workshopId}`, {

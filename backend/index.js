@@ -65,7 +65,7 @@ app.use(cors({
       'https://api.vhass.in',
       'https://vhass-frontend.onrender.com',
       'https://vhass-backend.onrender.com',
-      'https://vhass-full.onrender.com',
+      'https://api.vhassacademy.com',
       'https://vhass-front.vercel.app',
       'https://vhass-front-6682o09ot-vhass-projects-7b5ca00b.vercel.app',
       'http://localhost:5173',

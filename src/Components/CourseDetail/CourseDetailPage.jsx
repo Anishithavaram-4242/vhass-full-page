@@ -173,8 +173,8 @@ export default function CourseDetailsPage() {
   useEffect(() => {
     const loadCourse = async () => {
       try {
-        const res = await fetch('/api/course/all', { credentials: 'include' })
-        const data = await res.json()
+        const apiService = new ApiService();
+        const data = await apiService.getAllCourses();
         const list = data.courses || []
         const toSlug = (title) => title?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
         const match = list.find((c) => toSlug(c.title) === slug)
