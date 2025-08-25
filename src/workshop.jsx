@@ -58,8 +58,7 @@ export default function VHASSWorkshopsPage() {
     // Fetch workshops from backend using API service
     const loadWorkshops = async () => {
       try {
-        const apiService = new ApiService();
-        const data = await apiService.getAllWorkshops();
+        const data = await ApiService.getAllWorkshops();
         const list = Array.isArray(data.workshops) ? data.workshops : []
         setWorkshops(list)
         // After a small delay, enable view details buttons

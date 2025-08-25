@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import apiService from '../services/api.js';
+import ApiService from '../services/api.js';
 
 const AuthContext = createContext();
 
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     setLastCheck(now);
 
     try {
-      const response = await apiService.getProfile();
+      const response = await ApiService.getProfile();
       if (response.user) {
         setUser(response.user);
       } else {
@@ -57,9 +57,9 @@ export const AuthProvider = ({ children }) => {
       let response;
 
       if (credentials.googleId) {
-        response = await apiService.googleLogin(credentials);
+        response = await ApiService.googleLogin(credentials);
       } else {
-        response = await apiService.login(credentials);
+        response = await ApiService.login(credentials);
       }
 
       if (response.success) {
@@ -82,7 +82,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await apiService.logout();
+      await ApiService.logout();
     } catch (error) {
       console.error('Logout error:', error);
     } finally {
@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      await apiService.register(userData);
+      await ApiService.register(userData);
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };

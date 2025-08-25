@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext.jsx";
 import Navbar from "../Components/navbar";
 import Footer from "../Components/footer";
-import apiService from "../services/api.js";
+import ApiService from "../services/api.js";
 import "./Dashboard.css";
 
 // Helper function to construct proper image URL
@@ -70,15 +70,15 @@ function Dashboard() {
     setLoading(true);
     try {
       // Load user's registered courses
-      const coursesResponse = await apiService.getUserCourses();
+      const coursesResponse = await ApiService.getUserCourses();
       setRegisteredCourses(coursesResponse.courses || []);
 
       // Load user's registered workshops
-      const workshopsResponse = await apiService.getUserWorkshops();
+      const workshopsResponse = await ApiService.getUserWorkshops();
       setRegisteredWorkshops(workshopsResponse.workshops || []);
 
       // Load enrollment history
-      const historyResponse = await apiService.getEnrollmentHistory();
+      const historyResponse = await ApiService.getEnrollmentHistory();
       setEnrollmentHistory(historyResponse.history || []);
 
     } catch (error) {
@@ -96,7 +96,7 @@ function Dashboard() {
     setSuccess("");
 
     try {
-      const response = await apiService.updateProfile(profileData);
+      const response = await ApiService.updateProfile(profileData);
       if (response.success) {
         setSuccess("Profile updated successfully!");
         setIsEditingProfile(false);

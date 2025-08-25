@@ -2,7 +2,7 @@ import React from 'react';
 import { GoogleLogin as GoogleLoginButton } from '@react-oauth/google';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';
-import apiService from '../services/api.js';
+import ApiService from '../services/api.js';
 
 export default function GoogleLogin() {
   const { login } = useAuth();
@@ -58,7 +58,7 @@ export default function GoogleLogin() {
         <button
           type="button"
           onClick={() => {
-            window.location.href = apiService.getGoogleAuthUrl();
+            window.location.href = ApiService.getGoogleAuthUrl();
           }}
           style={{
             border: '1px solid #e5e7eb',

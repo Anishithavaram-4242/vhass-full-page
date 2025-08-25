@@ -8,7 +8,7 @@ import { Label } from "@/Components/ui/label"
 import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram, ArrowLeft, X } from "lucide-react"
 import Navbar from "@/Components/navbar"
 import { useAuth } from "../../context/AuthContext.jsx"
-import apiService from "../../services/api.js"
+import ApiService from "../../services/api.js"
 
 // Helper function to construct proper image URL
 const getImageUrl = (imagePath) => {
@@ -173,8 +173,7 @@ export default function CourseDetailsPage() {
   useEffect(() => {
     const loadCourse = async () => {
       try {
-        const apiService = new ApiService();
-        const data = await apiService.getAllCourses();
+        const data = await ApiService.getAllCourses();
         const list = data.courses || []
         const toSlug = (title) => title?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")
         const match = list.find((c) => toSlug(c.title) === slug)
@@ -250,7 +249,7 @@ export default function CourseDetailsPage() {
     
     try {
       // Use backend SDK checkout flow
-      const resp = await apiService.phonepeCheckout('course', course._id || course.id)
+             const resp = await ApiService.phonepeCheckout('course', course._id || course.id)
       if (resp && resp.checkoutPageUrl) {
         window.location.href = resp.checkoutPageUrl
       } else {
