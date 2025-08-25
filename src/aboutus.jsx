@@ -197,7 +197,7 @@ const AboutUs = () => {
             <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-2xl p-1">
               <div className="bg-gray-900 rounded-2xl p-8 h-full flex flex-col">
                 <div className="flex items-start mb-6">
-                  <div className="bg-gray-800 border-2 border-dashed rounded-xl w-16 h-16 mr-4" />
+                  <img src="/images/hemanth.webp" alt="Pagadala Hemanth Krishna Vardhan" className="rounded-xl w-16 h-16 mr-4 object-cover" />
                   <div>
                     <h3 className="text-2xl font-bold">Pagadala Hemanth Krishna Vardhan</h3>
                     <div className="text-blue-400 font-medium">Founder & CEO</div>
@@ -216,7 +216,7 @@ const AboutUs = () => {
             <div className="bg-gradient-to-br from-purple-900/20 to-blue-900/20 rounded-2xl p-1">
               <div className="bg-gray-900 rounded-2xl p-8 h-full flex flex-col">
                 <div className="flex items-start mb-6">
-                  <div className="bg-gray-800 border-2 border-dashed rounded-xl w-16 h-16 mr-4" />
+                  <img src="/images/uday.jpg" alt="Uday Venkat Charkanam" className="rounded-xl w-16 h-16 mr-4 object-cover" />
                   <div>
                     <h3 className="text-2xl font-bold">Uday Venkat Charkanam</h3>
                     <div className="text-purple-400 font-medium">Chief Operating Officer</div>
