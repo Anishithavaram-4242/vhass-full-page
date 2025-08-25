@@ -50,7 +50,7 @@ const Footer = () => {
                     <Link to="/contact" className="footer-link-cell">Contact Us</Link>
                   </div>
                   <div className="footer-links-row">
-                    <Link to="/course" className="footer-link-cell">Courses</Link>
+                    <Link to="/course" className="footer-link-cell">Course</Link>
                     <Link to="/course" className="footer-link-cell">Bounty Hunting</Link>
                     <div className="footer-link-cell">
                       9-1-70, Brilliant's School Area,
