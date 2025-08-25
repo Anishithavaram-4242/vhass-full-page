@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./navbar.css";
 import React from "react";
 import { useAuth } from "../context/AuthContext.jsx";
@@ -9,6 +9,7 @@ function Navbar() {
   const navigate = useNavigate();
   const { logout, loading } = useAuth();
   const { user } = useAuthCheck();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleMouseMove = (e) => {
     const button = e.currentTarget;
@@ -24,23 +25,31 @@ function Navbar() {
     navigate("/");
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
   return (
     <header>
-      <div className="navbar">
+      <div className={`navbar ${isMobileMenuOpen ? 'mobile-menu-open' : ''}`}>
         <div className="brand" onClick={() => navigate("/")}>
           <img src="VHASS.png" alt="VHASS Logo" className="logo" />
-          <h1>VHASS</h1>
+          <h1 className="brand-text">VHASS</h1>
         </div>
 
-        <nav>
+        <nav className={`nav-menu ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
           <ul>
-            <li><button className="nav-libtn" onClick={() => navigate("/")} onMouseMove={handleMouseMove}>Home</button></li>
-            <li><button className="nav-libtn" onClick={() => navigate("/course")} onMouseMove={handleMouseMove}>Courses</button></li>
-            <li><button className="nav-libtn" onClick={() => navigate("/workshop")} onMouseMove={handleMouseMove}>Workshop</button></li>
-            <li><button className="nav-libtn" onClick={() => navigate("/Entrepreneur")} onMouseMove={handleMouseMove}>Entrepreneur</button></li>
-            <li><button className="nav-libtn" onClick={() => navigate("/Services")} onMouseMove={handleMouseMove}>Services</button></li>
-            <li><button className="nav-libtn" onClick={() => navigate("/aboutus")} onMouseMove={handleMouseMove}>About Us</button></li>
-            <li><button className="nav-libtn" onClick={() => navigate("/helpdesk")} onMouseMove={handleMouseMove}>Help Desk</button></li>
+            <li><button className="nav-libtn" onClick={() => { navigate("/"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>Home</button></li>
+            <li><button className="nav-libtn" onClick={() => { navigate("/course"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>Courses</button></li>
+            <li><button className="nav-libtn" onClick={() => { navigate("/workshop"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>Workshop</button></li>
+            <li><button className="nav-libtn" onClick={() => { navigate("/Entrepreneur"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>Entrepreneur</button></li>
+            <li><button className="nav-libtn" onClick={() => { navigate("/Services"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>Services</button></li>
+            <li><button className="nav-libtn" onClick={() => { navigate("/aboutus"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>About Us</button></li>
+            <li><button className="nav-libtn" onClick={() => { navigate("/helpdesk"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>Help Desk</button></li>
             
           </ul>
         </nav>
@@ -49,17 +58,24 @@ function Navbar() {
           {loading ? (
             <div style={{ color: 'white', fontSize: '14px' }}>Loading...</div>
           ) : user ? (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-              <button className="login" onClick={() => navigate("/dashboard")} onMouseMove={handleMouseMove}>Dashboard</button>
+            <div className="user-buttons">
+              <button className="login" onClick={() => { navigate("/dashboard"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>Dashboard</button>
               {user.role === 'admin' && (
-                <button className="login" onClick={() => navigate("/admin")} onMouseMove={handleMouseMove} style={{ backgroundColor: '#B88AFF', color: '#000000' }}>Admin</button>
+                <button className="login" onClick={() => { navigate("/admin"); closeMobileMenu(); }} onMouseMove={handleMouseMove} style={{ backgroundColor: '#B88AFF', color: '#000000' }}>Admin</button>
               )}
             
             </div>
           ) : (
-            <button className="login" onClick={() => navigate("/auth")} onMouseMove={handleMouseMove}>LOGIN</button>
+            <button className="login" onClick={() => { navigate("/auth"); closeMobileMenu(); }} onMouseMove={handleMouseMove}>LOGIN</button>
           )}
         </div>
+
+        {/* Mobile Menu Toggle */}
+        <button className="mobile-menu-toggle" onClick={toggleMobileMenu}>
+          <span className={`hamburger ${isMobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger ${isMobileMenuOpen ? 'open' : ''}`}></span>
+          <span className={`hamburger ${isMobileMenuOpen ? 'open' : ''}`}></span>
+        </button>
       </div>
     </header>
   );

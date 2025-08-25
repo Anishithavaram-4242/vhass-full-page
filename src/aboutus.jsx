@@ -12,23 +12,23 @@ const AboutUs = () => {
     <Navbar/>
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white font-sans">
       {/* Hero Section */}
-      <header className="relative py-24 px-6 overflow-hidden">
+      <header className="relative py-12 md:py-24 px-4 md:px-6 overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&q=80')] bg-cover bg-center opacity-20"></div>
         <div className="relative max-w-6xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 tracking-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 tracking-tight">
             About <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">VHASS</span>
           </h1>
-          <p className="text-xl text-blue-100 max-w-2xl mx-auto mb-10">
+          <p className="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-6 md:mb-10 px-4">
             Empowering the digital world through cutting-edge cybersecurity education
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 md:gap-4 px-4">
   <Link to="/course">
-    <button className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/20">
+    <button className="px-6 md:px-8 py-2 md:py-3 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full font-semibold hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/20 text-sm md:text-base">
       Explore Courses
     </button>
   </Link>
   <a href="#contact">
-    <button className="px-8 py-3 bg-gray-800 rounded-full font-semibold hover:bg-gray-700 transition-all border border-gray-700">
+    <button className="px-6 md:px-8 py-2 md:py-3 bg-gray-800 rounded-full font-semibold hover:bg-gray-700 transition-all border border-gray-700 text-sm md:text-base">
       Contact Us
     </button>
   </a>
@@ -37,9 +37,9 @@ const AboutUs = () => {
       </header>
 
       {/* Mission Section */}
-      <section className="py-16 px-6">
+      <section className="py-12 md:py-16 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
               <div className="bg-gradient-to-br from-blue-900/30 to-purple-900/30 rounded-2xl p-1 mb-8 w-fit">
                 <div className="bg-gray-900 p-5 rounded-xl">
@@ -50,7 +50,7 @@ const AboutUs = () => {
                 </div>
               </div>
               
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="bg-gray-800/50 p-5 rounded-xl border border-gray-700">
                   <div className="text-blue-400 text-3xl mb-3">🔒</div>
                   <h3 className="font-bold mb-2">Security First</h3>
@@ -186,14 +186,14 @@ const AboutUs = () => {
       </section>
 
       {/* Leadership Section */}
-      <section className="py-16 px-6">
+      <section className="py-12 md:py-16 px-4 md:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4">Leadership Team</h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">The visionaries driving our cybersecurity mission</p>
+          <div className="text-center mb-8 md:mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3 md:mb-4">Leadership Team</h2>
+            <p className="text-gray-400 max-w-2xl mx-auto px-4">The visionaries driving our cybersecurity mission</p>
           </div>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
             <div className="bg-gradient-to-br from-blue-900/20 to-purple-900/20 rounded-2xl p-1">
               <div className="bg-gray-900 rounded-2xl p-8 h-full flex flex-col">
                 <div className="flex items-start mb-6">

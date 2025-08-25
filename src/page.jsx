@@ -126,23 +126,23 @@ export default function VHASSCoursesPage() {
       <Navbar />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-8 md:py-12">
         {/* Hero Section */}
         <div
-          className="text-center mb-16 py-20 rounded-3xl shadow-2xl relative overflow-hidden"
+          className="text-center mb-8 md:mb-16 py-12 md:py-20 rounded-2xl md:rounded-3xl shadow-2xl relative overflow-hidden mx-4 md:mx-0"
           style={{ backgroundColor: "#000000" }}
         >
           <div className="absolute inset-0 opacity-10" style={{ backgroundColor: "#B88AFF" }}></div>
-          <div className="relative z-10">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6" style={{ color: "#FFFFF0" }}>
+          <div className="relative z-10 px-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6" style={{ color: "#FFFFF0" }}>
               Explore Our Courses
             </h1>
-            <p className="text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed" style={{ color: "#B88AFF" }}>
+            <p className="text-lg sm:text-xl md:text-2xl max-w-4xl mx-auto leading-relaxed px-4" style={{ color: "#B88AFF" }}>
               Learn from industry experts and gain hands-on experience with our comprehensive cybersecurity courses
             </p>
-            <div className="mt-8">
+            <div className="mt-6 md:mt-8">
               <div
-                className="inline-block px-8 py-3 rounded-full text-lg font-semibold"
+                className="inline-block px-6 md:px-8 py-2 md:py-3 rounded-full text-base md:text-lg font-semibold"
                 style={{ backgroundColor: "#B88AFF", color: "#000000" }}
               >
                 🚀 Transform Your Career Today
@@ -152,7 +152,7 @@ export default function VHASSCoursesPage() {
         </div>
 
         {/* Course Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 lg:gap-8 max-w-7xl mx-auto px-4">
           {courses.map((course, index) => (
             <Card
               key={course._id || index}
@@ -295,16 +295,16 @@ export default function VHASSCoursesPage() {
         </div>
 
         {/* Call to Action Section */}
-        <div className="text-center mt-20">
-          <div className="inline-block px-12 py-6 rounded-2xl shadow-xl" style={{ backgroundColor: "#B88AFF" }}>
-            <h2 className="text-3xl font-bold mb-4" style={{ color: "#000000" }}>
+        <div className="text-center mt-12 md:mt-20 px-4">
+          <div className="inline-block px-6 md:px-12 py-4 md:py-6 rounded-xl md:rounded-2xl shadow-xl mx-4" style={{ backgroundColor: "#B88AFF" }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4" style={{ color: "#000000" }}>
               Ready to Start Your Journey?
             </h2>
-            <p className="text-lg mb-6" style={{ color: "#000000" }}>
+            <p className="text-base md:text-lg mb-4 md:mb-6 px-4" style={{ color: "#000000" }}>
               Join thousands of students who have transformed their careers with VHASS
             </p>
             <Button
-              className="px-8 py-3 text-lg font-bold rounded-lg hover:opacity-90 transition-all duration-200 transform hover:scale-105"
+              className="px-6 md:px-8 py-2 md:py-3 text-base md:text-lg font-bold rounded-lg hover:opacity-90 transition-all duration-200 transform hover:scale-105"
               style={{ backgroundColor: "#000000", color: "#FFFFF0" }}
             >
               Get Started Today 🎯

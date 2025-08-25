@@ -174,9 +174,158 @@ body, html {
   gap: 10px; /* Adjust this value for minimal spacing */
 }
 
+.brand-text {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 30px;
+  margin-top: 10px;
+}
+
 .logo {
   width: 80px;
   height: 80px;
   object-fit: contain;
   margin-right: 0;
+}
+
+/* Mobile Menu Toggle */
+.mobile-menu-toggle {
+  display: none;
+  flex-direction: column;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1000;
+}
+
+.hamburger {
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 3px 0;
+  transition: 0.3s;
+  border-radius: 2px;
+}
+
+.hamburger.open:nth-child(1) {
+  transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.hamburger.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open:nth-child(3) {
+  transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 10px 15px;
+    position: relative;
+  }
+
+  .brand-text {
+    font-size: 24px;
+  }
+
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .nav-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%;
+    max-width: 300px;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    transition: right 0.3s ease;
+    z-index: 999;
+    padding-top: 80px;
+  }
+
+  .nav-menu.mobile-open {
+    right: 0;
+  }
+
+  .nav-menu ul {
+    flex-direction: column;
+    margin: 0;
+    padding: 20px;
+    gap: 10px;
+  }
+
+  .nav-menu ul li {
+    display: block;
+    width: 100%;
+  }
+
+  .nav-menu .nav-libtn {
+    width: 100%;
+    text-align: left;
+    padding: 15px 20px;
+    font-size: 18px;
+    border-radius: 10px;
+    margin: 5px 0;
+  }
+
+  .user-menu {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .user-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .user-menu .login {
+    width: auto;
+    min-width: 120px;
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  /* Hide desktop nav when mobile menu is open */
+  .mobile-menu-open .nav-menu:not(.mobile-open) {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 8px 12px;
+  }
+
+  .brand-text {
+    font-size: 20px;
+  }
+
+  .logo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .nav-menu {
+    width: 90%;
+  }
+
+  .nav-menu .nav-libtn {
+    font-size: 16px;
+    padding: 12px 15px;
+  }
 }
