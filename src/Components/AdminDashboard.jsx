@@ -99,31 +99,49 @@ export default function AdminDashboard() {
   const loadData = async () => {
     setLoading(true)
     try {
+      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const token = localStorage.getItem('auth_token')
+      
       // Load users
-      const usersResponse = await fetch('/api/admin/users', {
-        credentials: 'include'
+      const usersResponse = await fetch(`${baseURL}/api/admin/users`, {
+        credentials: 'include',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        }
       })
       if (usersResponse.ok) {
         const usersData = await usersResponse.json()
         setUsers(usersData.users || [])
+      } else {
+        console.error('Failed to load users:', usersResponse.status, usersResponse.statusText)
       }
 
       // Load courses
-      const coursesResponse = await fetch('/api/admin/courses', {
-        credentials: 'include'
+      const coursesResponse = await fetch(`${baseURL}/api/admin/courses`, {
+        credentials: 'include',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        }
       })
       if (coursesResponse.ok) {
         const coursesData = await coursesResponse.json()
         setCourses(coursesData.courses || [])
+      } else {
+        console.error('Failed to load courses:', coursesResponse.status, coursesResponse.statusText)
       }
 
       // Load workshops
-      const workshopsResponse = await fetch('/api/admin/workshops', {
-        credentials: 'include'
+      const workshopsResponse = await fetch(`${baseURL}/api/admin/workshops`, {
+        credentials: 'include',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        }
       })
       if (workshopsResponse.ok) {
         const workshopsData = await workshopsResponse.json()
         setWorkshops(workshopsData.workshops || [])
+      } else {
+        console.error('Failed to load workshops:', workshopsResponse.status, workshopsResponse.statusText)
       }
     } catch (error) {
       console.error('Error loading data:', error)
@@ -135,9 +153,15 @@ export default function AdminDashboard() {
   const handleAddUser = async (e) => {
     e.preventDefault()
     try {
-      const response = await fetch('/api/admin/user', {
+      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const token = localStorage.getItem('auth_token')
+      
+      const response = await fetch(`${baseURL}/api/admin/user`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
         credentials: 'include',
         body: JSON.stringify(userForm)
       })
@@ -145,6 +169,8 @@ export default function AdminDashboard() {
         setShowAddUser(false)
         setUserForm({ name: "", email: "", phone: "", role: "user" })
         loadData()
+      } else {
+        console.error('Failed to add user:', response.status, response.statusText)
       }
     } catch (error) {
       console.error('Error adding user:', error)
@@ -234,7 +260,9 @@ export default function AdminDashboard() {
         console.log('No course image provided')
       }
 
-      const url = isEditing ? `/api/admin/course/${editingItem.data._id}` : '/api/admin/course'
+      // Use the correct API base URL
+      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const url = isEditing ? `${baseURL}/api/admin/course/${editingItem.data._id}` : `${baseURL}/api/admin/course`
       const method = isEditing ? 'PUT' : 'POST'
 
       console.log('Sending course data to:', url, 'with method:', method)
@@ -243,15 +271,33 @@ export default function AdminDashboard() {
         console.log(key, ':', value)
       }
 
+      // Get token from localStorage for authorization
+      const token = localStorage.getItem('auth_token')
+      
       const response = await fetch(url, {
         method,
         credentials: 'include',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
         body: formData
       })
       
       console.log('Course creation response status:', response.status)
-      const responseData = await response.json()
-      console.log('Course creation response:', responseData)
+      
+      // Check if response is JSON before trying to parse
+      const contentType = response.headers.get('content-type')
+      let responseData
+      
+      if (contentType && contentType.includes('application/json')) {
+        responseData = await response.json()
+        console.log('Course creation response:', responseData)
+      } else {
+        // Handle non-JSON responses (like HTML error pages)
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        responseData = { message: `Server returned ${response.status}: ${response.statusText}` }
+      }
       
       if (response.ok) {
         setShowAddCourse(false)
@@ -330,16 +376,35 @@ export default function AdminDashboard() {
         formData.append('image', workshopImage)
       }
 
-      const url = isEditing ? `/api/admin/workshop/${editingItem.data._id}` : '/api/admin/workshop'
+      // Use the correct API base URL
+      const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+      const url = isEditing ? `${baseURL}/api/admin/workshop/${editingItem.data._id}` : `${baseURL}/api/admin/workshop`
       const method = isEditing ? 'PUT' : 'POST'
+
+      // Get token from localStorage for authorization
+      const token = localStorage.getItem('auth_token')
 
       const response = await fetch(url, {
         method,
         credentials: 'include',
+        headers: {
+          ...(token && { 'Authorization': `Bearer ${token}` }),
+        },
         body: formData
       })
       
-      const responseData = await response.json()
+      // Check if response is JSON before trying to parse
+      const contentType = response.headers.get('content-type')
+      let responseData
+      
+      if (contentType && contentType.includes('application/json')) {
+        responseData = await response.json()
+      } else {
+        // Handle non-JSON responses (like HTML error pages)
+        const text = await response.text()
+        console.error('Non-JSON response:', text)
+        responseData = { message: `Server returned ${response.status}: ${response.statusText}` }
+      }
       
       if (response.ok) {
         setShowAddWorkshop(false)
@@ -372,12 +437,20 @@ export default function AdminDashboard() {
   const handleDeleteUser = async (userId) => {
     if (window.confirm('Are you sure you want to delete this user?')) {
       try {
-        const response = await fetch(`/api/admin/user/${userId}`, {
+        const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+        const token = localStorage.getItem('auth_token')
+        
+        const response = await fetch(`${baseURL}/api/admin/user/${userId}`, {
           method: 'DELETE',
-          credentials: 'include'
+          credentials: 'include',
+          headers: {
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          }
         })
         if (response.ok) {
           loadData()
+        } else {
+          console.error('Failed to delete user:', response.status, response.statusText)
         }
       } catch (error) {
         console.error('Error deleting user:', error)
@@ -388,12 +461,20 @@ export default function AdminDashboard() {
   const handleDeleteCourse = async (courseId) => {
     if (window.confirm('Are you sure you want to delete this course?')) {
       try {
-        const response = await fetch(`/api/admin/course/${courseId}`, {
+        const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+        const token = localStorage.getItem('auth_token')
+        
+        const response = await fetch(`${baseURL}/api/admin/course/${courseId}`, {
           method: 'DELETE',
-          credentials: 'include'
+          credentials: 'include',
+          headers: {
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          }
         })
         if (response.ok) {
           loadData()
+        } else {
+          console.error('Failed to delete course:', response.status, response.statusText)
         }
       } catch (error) {
         console.error('Error deleting course:', error)
@@ -404,12 +485,20 @@ export default function AdminDashboard() {
   const handleDeleteWorkshop = async (workshopId) => {
     if (window.confirm('Are you sure you want to delete this workshop?')) {
       try {
-        const response = await fetch(`/api/admin/workshop/${workshopId}`, {
+        const baseURL = import.meta.env.VITE_API_URL || 'https://vhass-full.onrender.com'
+        const token = localStorage.getItem('auth_token')
+        
+        const response = await fetch(`${baseURL}/api/admin/workshop/${workshopId}`, {
           method: 'DELETE',
-          credentials: 'include'
+          credentials: 'include',
+          headers: {
+            ...(token && { 'Authorization': `Bearer ${token}` }),
+          }
         })
         if (response.ok) {
           loadData()
+        } else {
+          console.error('Failed to delete workshop:', response.status, response.statusText)
         }
       } catch (error) {
         console.error('Error deleting workshop:', error)

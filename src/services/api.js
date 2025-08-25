@@ -15,7 +15,9 @@ class ApiService {
 
   // Helper method to make API calls
   async makeRequest(endpoint, options = {}) {
-    const url = `${this.baseURL}${endpoint}?_cb=${CACHE_BUSTER}`;
+    // Remove leading slash if present to avoid double slashes
+    const cleanEndpoint = endpoint.startsWith('/') ? endpoint.slice(1) : endpoint;
+    const url = `${this.baseURL}/${cleanEndpoint}?_cb=${CACHE_BUSTER}`;
     console.log('🌐 Making API request to:', url);
     
     // Get token from localStorage
@@ -42,13 +44,22 @@ class ApiService {
         throw new Error('Authentication required');
       }
       
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.message || 'API request failed');
+      // Check if response is JSON before trying to parse
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.message || 'API request failed');
+        }
+        
+        return data;
+      } else {
+        // Handle non-JSON responses (like HTML error pages)
+        const text = await response.text();
+        console.error('Non-JSON response:', text);
+        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
       }
-      
-      return data;
     } catch (error) {
       console.error('API Error:', error);
       throw error;
