@@ -55,8 +55,13 @@ export default function VHASSCoursesPage() {
   })
 
   useEffect(() => {
+    // Debug: Add version check
+    console.log('🔄 Courses page loaded - Version: 2.0 -', new Date().toISOString());
+    console.log('🔧 ApiService check:', typeof ApiService);
+    
     const fetchCourses = async () => {
       try {
+        console.log('📡 Fetching courses with ApiService...');
         const data = await ApiService.getAllCourses();
         
         // Debug: Log the raw course data to see image values

@@ -233,11 +233,13 @@ class ApiService {
     return this.makeRequest('/admin/users');
   }
 
-  async getAllCourses() {
+  // Admin: list all courses
+  async adminGetAllCourses() {
     return this.makeRequest('/admin/courses');
   }
 
-  async getAllWorkshops() {
+  // Admin: list all workshops
+  async adminGetAllWorkshops() {
     return this.makeRequest('/admin/workshops');
   }
 
