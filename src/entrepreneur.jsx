@@ -3,6 +3,7 @@ import React from "react"
 import { useNavigate } from "react-router-dom"  
 import Navbar from "./Components/navbar"
 export default function EntrepreneurshipPage() {
+  const navigate = useNavigate();
   return (
     <div>
       <Navbar />
@@ -25,7 +26,7 @@ export default function EntrepreneurshipPage() {
             Turn your idea into a successful business with our comprehensive entrepreneur program designed for aspiring
             security professionals.
           </p>
-          <button className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+          <button onClick={() => navigate('/course')} className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
             Apply Now
           </button>
         </div>
@@ -193,7 +194,7 @@ export default function EntrepreneurshipPage() {
           <h2 className="text-3xl font-bold mb-4 text-white">Ready to Launch Your Venture?</h2>
           <p className="text-blue-100 mb-8">Applications for our next cohort are now open. Limited spots available.</p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
+            <button onClick={() => navigate('/course')} className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors">
               Apply Now
             </button>
             <button className="border border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-900 transition-colors">

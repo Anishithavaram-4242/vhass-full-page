@@ -46,33 +46,33 @@ const Footer = () => {
                 <div className="footer-links-table">
                   <div className="footer-links-row">
                     <Link to="/" className="footer-link-cell">Home</Link>
-                    <Link to="/courses" className="footer-link-cell">Ethical Hacking</Link>
+                    <Link to="/course" className="footer-link-cell">Ethical Hacking</Link>
                     <Link to="/contact" className="footer-link-cell">Contact Us</Link>
                   </div>
                   <div className="footer-links-row">
-                    <Link to="/courses" className="footer-link-cell">Courses</Link>
-                    <Link to="/courses" className="footer-link-cell">Bounty Hunting</Link>
+                    <Link to="/course" className="footer-link-cell">Courses</Link>
+                    <Link to="/course" className="footer-link-cell">Bounty Hunting</Link>
                     <div className="footer-link-cell">
                       9-1-70, Brilliant's School Area,
                     </div>
                   </div>
                   <div className="footer-links-row">
                     <Link to="/workshop" className="footer-link-cell">Workshop</Link>
-                    <Link to="/courses" className="footer-link-cell">Awareness of Cyber Crime</Link>
+                    <Link to="/course" className="footer-link-cell">Awareness of Cyber Crime</Link>
                     <div className="footer-link-cell">
                       Ibrahimpatnam Krishna-521456,
                     </div>
                   </div>
                   <div className="footer-links-row">
                     <Link to="/entrepreneur" className="footer-link-cell">Entrepreneur</Link>
-                    <Link to="/courses" className="footer-link-cell">Cyber Security for Teenagers</Link>
+                    <Link to="/course" className="footer-link-cell">Cyber Security for Teenagers</Link>
                     <div className="footer-link-cell">
                       Andhra Pradesh
                     </div>
                   </div>
                   <div className="footer-links-row">
                     <Link to="/about" className="footer-link-cell">About Us</Link>
-                    <Link to="/courses" className="footer-link-cell">Entrepreneurship for Beginners</Link>
+                    <Link to="/course" className="footer-link-cell">Entrepreneurship for Beginners</Link>
                     <div className="footer-link-cell contact-info">
                       <div className="contact-item">
                         <FaPhone className="contact-icon" />
