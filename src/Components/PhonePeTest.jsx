@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
-import apiService from '../services/api.js';
+import ApiService from '../services/api.js';
 
 export default function PhonePeTest() {
   const { user } = useAuth();
