@@ -58,6 +58,9 @@ app.use(cors({
     if (!origin) return callback(null, true);
     
     const allowedOrigins = [
+      'https://vhassacademy.com',
+      'https://www.vhassacademy.com',
+      'https://api.vhassacademy.com',
       'https://www.vhass.in',
       'https://api.vhass.in',
       'https://vhass-frontend.onrender.com',
@@ -72,11 +75,14 @@ app.use(cors({
       'http://127.0.0.1:5174'
     ];
     
+    console.log('🔍 CORS check for origin:', origin);
+    
     if (allowedOrigins.indexOf(origin) !== -1) {
+      console.log('✅ CORS allowed origin:', origin);
       callback(null, true);
     } else {
-      console.log('CORS blocked origin:', origin);
-      callback(new Error('Not allowed by CORS'));
+      console.log('❌ CORS blocked origin:', origin);
+      callback(null, false); // Don't throw error, just return false
     }
   },
   credentials: true,
@@ -118,8 +124,24 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Global OPTIONS handler for CORS preflight
+// Global OPTIONS handler for CORS preflight - let the CORS middleware handle it
 app.options('*', cors());
+
+// Additional CORS headers for all responses
+app.use((req, res, next) => {
+  const allowedOrigins = ['https://www.vhassacademy.com', 'https://vhassacademy.com'];
+  const origin = req.headers.origin;
+  
+  if (allowedOrigins.includes(origin)) {
+    res.header('Access-Control-Allow-Origin', origin);
+  }
+  
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, token, Token, Accept, Origin, X-Requested-With, X-VERIFY, X-MERCHANT-ID');
+  
+  next();
+});
 
 const port = 5001;
 
@@ -261,9 +283,11 @@ process.on('unhandledRejection', (err) => {
   }
 });
 
-// Add session debug logging
-app.use((req, res, next) => {
-  console.log('Session:', req.session);
-  console.log('Session user:', req.session.user);
-  next();
-});
+// Add session debug logging (only in development)
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    console.log('Session:', req.session);
+    console.log('Session user:', req.session.user);
+    next();
+  });
+}

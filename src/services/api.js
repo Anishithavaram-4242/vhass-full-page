@@ -30,6 +30,7 @@ class ApiService {
         ...options.headers,
       },
       credentials: 'include', // Include cookies for session management
+      mode: 'cors', // Explicitly set CORS mode
       ...options,
     };
 

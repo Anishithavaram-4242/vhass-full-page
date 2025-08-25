@@ -30,7 +30,7 @@ services:
     staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
-        value: https://vhass-backend.onrender.com
+        value: https://api.vhassacademy.com
     autoDeploy: true
     routes:
       - type: rewrite
