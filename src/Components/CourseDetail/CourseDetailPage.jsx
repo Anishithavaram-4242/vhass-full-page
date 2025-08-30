@@ -9,6 +9,7 @@ import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram, ArrowLeft, X } from 
 import Navbar from "@/Components/navbar"
 import { useAuth } from "../../context/AuthContext.jsx"
 import ApiService from "../../services/api.js"
+import CouponInput from "../CouponInput.jsx"
 
 // Helper function to construct proper image URL
 const getImageUrl = (imagePath) => {
@@ -169,6 +170,8 @@ export default function CourseDetailsPage() {
   })
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [appliedCoupon, setAppliedCoupon] = useState(null)
+  const [finalAmount, setFinalAmount] = useState(null)
 
   useEffect(() => {
     const loadCourse = async () => {
@@ -248,12 +251,26 @@ export default function CourseDetailsPage() {
     setIsProcessingPayment(true)
     
     try {
-      // Use backend SDK checkout flow
-             const resp = await ApiService.phonepeCheckout('course', course._id || course.id)
-      if (resp && resp.checkoutPageUrl) {
-        window.location.href = resp.checkoutPageUrl
+      // Pass coupon code to backend if applied
+      const requestBody = appliedCoupon ? {
+        couponCode: appliedCoupon.coupon.code
+      } : {};
+
+      const resp = await fetch(`/api/course/${course._id || course.id}/phonepe-checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify(requestBody),
+      });
+
+      const data = await resp.json();
+      
+      if (data.checkoutPageUrl) {
+        window.location.href = data.checkoutPageUrl;
       } else {
-        throw new Error('Failed to get checkout URL')
+        throw new Error('Failed to get checkout URL');
       }
     } catch (error) {
       console.error("PhonePe payment error:", error)
@@ -268,6 +285,16 @@ export default function CourseDetailsPage() {
       ...formData,
       [e.target.name]: e.target.value,
     })
+  }
+
+  const handleCouponApplied = (couponData) => {
+    setAppliedCoupon(couponData)
+    setFinalAmount(couponData.finalAmount)
+  }
+
+  const handleCouponRemoved = () => {
+    setAppliedCoupon(null)
+    setFinalAmount(null)
   }
 
   return (
@@ -442,6 +469,15 @@ export default function CourseDetailsPage() {
                 />
               </div>
               
+              {/* Coupon Input */}
+              <CouponInput
+                onCouponApplied={handleCouponApplied}
+                onCouponRemoved={handleCouponRemoved}
+                originalAmount={parseInt(course.price.replace('₹', ''))}
+                courseId={course._id}
+                disabled={isProcessingPayment}
+              />
+              
               <div className="bg-gray-800 p-4 rounded-lg">
                 <p className="text-sm" style={{ color: "#B88AFF" }}>
                   <strong>Course:</strong> {course.title}
@@ -449,6 +485,11 @@ export default function CourseDetailsPage() {
                 <p className="text-sm" style={{ color: "#B88AFF" }}>
                   <strong>Price:</strong> {course.price}
                 </p>
+                {finalAmount && (
+                  <p className="text-sm text-green-400 mt-2">
+                    <strong>Final Price:</strong> ₹{finalAmount}
+                  </p>
+                )}
               </div>
               
               <div className="flex gap-4">
@@ -458,7 +499,7 @@ export default function CourseDetailsPage() {
                   disabled={isProcessingPayment}
                   style={{ backgroundColor: "#B88AFF", color: "#FFFFF0" }}
                 >
-                  {isProcessingPayment ? "Processing Payment..." : `Pay ${course.price}`}
+                  {isProcessingPayment ? "Processing Payment..." : `Pay ${finalAmount ? `₹${finalAmount}` : course.price}`}
                 </Button>
                 <Button
                   type="button"

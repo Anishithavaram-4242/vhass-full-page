@@ -216,32 +216,84 @@ export const phonepeCheckout = async (req, res) => {
     if (user.subscription.includes(course._id)) {
       return res.status(400).json({ message: 'You already have this course' });
     }
+
+    // Handle coupon discount if provided
+    const { couponCode } = req.body;
+    let originalAmount = Number(course.price);
+    let finalAmount = originalAmount;
+    let discountAmount = 0;
+    let couponData = null;
+
+    if (couponCode) {
+      try {
+        // Validate coupon
+        const couponResponse = await fetch(`${req.protocol}://${req.get('host')}/api/coupon/validate`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cookie': req.headers.cookie || '',
+          },
+          body: JSON.stringify({
+            code: couponCode,
+            courseId: course._id,
+            amount: originalAmount,
+          }),
+        });
+
+        if (couponResponse.ok) {
+          const couponResult = await couponResponse.json();
+          if (couponResult.success) {
+            couponData = couponResult.data;
+            finalAmount = couponData.finalAmount;
+            discountAmount = couponData.discountAmount;
+          }
+        }
+      } catch (couponError) {
+        console.error('Coupon validation error:', couponError);
+        // Continue with original amount if coupon validation fails
+      }
+    }
+
     const merchantOrderId = randomUUID();
-    const amount = Math.round(Number(course.price) * 100); // in paise
+    const amount = Math.round(finalAmount * 100); // in paise
+
     // Log SDK config for debugging
     console.log('=== PHONEPE SDK CONFIG (COURSE) ===');
     console.log('Client ID:', process.env.PHONEPE_SDK_CLIENT_ID || process.env.PHONEPE_MERCHANT_ID);
     console.log('Environment:', (process.env.PHONEPE_ENVIRONMENT || 'PREPROD'));
+    console.log('Original Amount:', originalAmount);
+    console.log('Final Amount:', finalAmount);
+    console.log('Discount Amount:', discountAmount);
     console.log('Amount (paise):', amount);
+
     const redirectBase = process.env.PHONEPE_REDIRECT_URL || 'http://localhost:5173';
+    
+    // Create transaction with coupon information
     const txn = await Transaction.create({
-        courseID: course._id,
-        merchantOrderID: merchantOrderId,
-        transactionAmount: course.price,
-        transactionStatus: "PENDING",
-      });
+      courseID: course._id,
+      merchantOrderID: merchantOrderId,
+      transactionAmount: finalAmount,
+      originalAmount: originalAmount,
+      discountAmount: discountAmount,
+      finalAmount: finalAmount,
+      couponCode: couponCode || null,
+      transactionStatus: "PENDING",
+    });
+
     const redirectUrl = `${redirectBase}/payment-success/${merchantOrderId}`;
     console.log('Redirect URL:', redirectUrl);
+    
     const request = StandardCheckoutPayRequest.builder()
       .merchantOrderId(merchantOrderId)
       .amount(amount)
       .redirectUrl(redirectUrl)
       .build();
+    
     const client = getPhonePeClient();
     const response = await client.pay(request);
     const checkoutPageUrl = response.redirectUrl;
-    // res.json({ checkoutPageUrl, merchantOrderId });
-    res.json({ checkoutPageUrl});
+    
+    res.json({ checkoutPageUrl });
   } catch (err) {
     console.error('PhonePe API Error:', err.response?.data || err.message);
     if (err.stack) console.error(err.stack);

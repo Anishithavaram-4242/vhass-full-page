@@ -38,6 +38,24 @@ const schema = new mongoose.Schema(
     transactionStatus: {
       type: String,
     },
+
+    // Coupon related fields
+    couponCode: {
+      type: String,
+    },
+
+    originalAmount: {
+      type: Number,
+    },
+
+    discountAmount: {
+      type: Number,
+      default: 0,
+    },
+
+    finalAmount: {
+      type: Number,
+    },
     
     createdAt: {
       type: Date,
