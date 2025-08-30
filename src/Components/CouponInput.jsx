@@ -27,8 +27,8 @@ const CouponInput = ({
     setError('');
 
     try {
-      // Use test endpoint temporarily for debugging
-      const response = await fetch('/api/coupon/test-validate', {
+      // Use course route endpoint as workaround
+      const response = await fetch('/api/course/validate-coupon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
