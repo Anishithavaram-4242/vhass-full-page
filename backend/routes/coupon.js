@@ -1,16 +1,4 @@
 import express from "express";
-import {
-  validateCoupon,
-  createCoupon,
-  getAllCoupons,
-  getCouponById,
-  updateCoupon,
-  deleteCoupon,
-  getCouponStats,
-  applyCouponToTransaction,
-} from "../controllers/coupon.js";
-import { isAuth } from "../middlewares/isAuth.js";
-import { isAdmin } from "../middlewares/isAuth.js";
 import { Coupon } from "../models/Coupon.js";
 
 const router = express.Router();
@@ -24,8 +12,8 @@ router.get("/test", (req, res) => {
   });
 });
 
-// Temporary test validation endpoint (no auth required for debugging)
-router.post("/test-validate", async (req, res) => {
+// Simple coupon validation endpoint (no auth required for now)
+router.post("/validate", async (req, res) => {
   try {
     const { code, amount } = req.body;
     
@@ -67,7 +55,7 @@ router.post("/test-validate", async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Coupon applied successfully (TEST MODE)",
+      message: "Coupon applied successfully",
       data: {
         coupon: {
           id: coupon._id,
@@ -84,7 +72,7 @@ router.post("/test-validate", async (req, res) => {
       },
     });
   } catch (error) {
-    console.error('Test coupon validation error:', error);
+    console.error('Coupon validation error:', error);
     res.status(500).json({
       success: false,
       message: "Internal server error",
@@ -92,17 +80,5 @@ router.post("/test-validate", async (req, res) => {
     });
   }
 });
-
-// User routes
-router.post("/validate", isAuth, validateCoupon);
-router.post("/apply", isAuth, applyCouponToTransaction);
-
-// Admin routes
-router.post("/create", isAuth, isAdmin, createCoupon);
-router.get("/all", isAuth, isAdmin, getAllCoupons);
-router.get("/:id", isAuth, isAdmin, getCouponById);
-router.put("/:id", isAuth, isAdmin, updateCoupon);
-router.delete("/:id", isAuth, isAdmin, deleteCoupon);
-router.get("/:id/stats", isAuth, isAdmin, getCouponStats);
 
 export default router;

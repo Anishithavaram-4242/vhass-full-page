@@ -1,4 +1,4 @@
-import { TryCatch } from "../middlewares/TryCatch.js";
+import TryCatch from "../middlewares/TryCatch.js";
 import { Coupon } from "../models/Coupon.js";
 import { CouponUsage } from "../models/CouponUsage.js";
 import { User } from "../models/User.js";
