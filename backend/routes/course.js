@@ -31,7 +31,7 @@ router.get("/mycourse", isAuth, getMyCourses);
 router.post("/course/phonepe/checkout/:id", isAuth, phonepeCheckout);
 router.post("/course/phonepe/status/:merchantOrderId", isAuth, phonepeStatus);
 
-// Temporary coupon validation endpoint (workaround)
+// Temporary coupon validation endpoint (workaround until coupon routes are deployed)
 router.post("/course/validate-coupon", async (req, res) => {
   try {
     const { code, amount } = req.body;
