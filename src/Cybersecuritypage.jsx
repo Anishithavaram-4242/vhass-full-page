@@ -12,7 +12,7 @@ function CybersecurityPage() {
           <h1>Cybersecurity Services</h1>
           <p className="hero-description">
             Protecting your digital assets starts with proactive defense and expert awareness. 
-            At [Your Company Name], we deliver advanced cybersecurity services tailored to your 
+            At Vhass Software Solutions Pvt. Ltd., we deliver advanced cybersecurity services tailored to your 
             organization's needs—whether it's identifying vulnerabilities or training your teams 
             to be your first line of defense.
           </p>
