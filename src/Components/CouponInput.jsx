@@ -27,7 +27,8 @@ const CouponInput = ({
     setError('');
 
     try {
-      const response = await fetch('/api/coupon/validate', {
+      // Use test endpoint temporarily for debugging
+      const response = await fetch('/api/coupon/test-validate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,7 +42,22 @@ const CouponInput = ({
         }),
       });
 
+      console.log('Coupon validation response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.log('Coupon validation error response:', errorText);
+        
+        try {
+          const errorData = JSON.parse(errorText);
+          throw new Error(errorData.message || 'Coupon validation failed');
+        } catch (parseError) {
+          throw new Error(`HTTP ${response.status}: ${errorText}`);
+        }
+      }
+
       const data = await response.json();
+      console.log('Coupon validation success:', data);
 
       if (data.success) {
         setAppliedCoupon(data.data);
@@ -54,7 +70,7 @@ const CouponInput = ({
       }
     } catch (err) {
       console.error('Coupon validation error:', err);
-      setError('Failed to validate coupon. Please try again.');
+      setError(err.message || 'Failed to validate coupon. Please try again.');
       setAppliedCoupon(null);
       onCouponRemoved();
     } finally {
