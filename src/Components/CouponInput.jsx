@@ -4,54 +4,6 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { Check, X, Tag } from 'lucide-react';
 
-// Temporary sample coupons (client-side validation)
-const SAMPLE_COUPONS = {
-  'WELCOME20': {
-    code: 'WELCOME20',
-    description: 'Welcome discount for new users',
-    discountType: 'percentage',
-    discountValue: 20,
-    minimumAmount: 1000,
-    maximumDiscount: 5000,
-    validFrom: '2024-01-01',
-    validUntil: '2024-12-31',
-    isActive: true
-  },
-  'CYBER50': {
-    code: 'CYBER50',
-    description: '50% off on cybersecurity courses',
-    discountType: 'percentage',
-    discountValue: 50,
-    minimumAmount: 500,
-    maximumDiscount: 10000,
-    validFrom: '2024-01-01',
-    validUntil: '2024-06-30',
-    isActive: true
-  },
-  'FLAT1000': {
-    code: 'FLAT1000',
-    description: 'Flat ₹1000 off on any course',
-    discountType: 'fixed',
-    discountValue: 1000,
-    minimumAmount: 2000,
-    maximumDiscount: 1000,
-    validFrom: '2024-01-01',
-    validUntil: '2024-12-31',
-    isActive: true
-  },
-  'STUDENT25': {
-    code: 'STUDENT25',
-    description: 'Student discount on all courses',
-    discountType: 'percentage',
-    discountValue: 25,
-    minimumAmount: 500,
-    maximumDiscount: 5000,
-    validFrom: '2024-01-01',
-    validUntil: '2024-12-31',
-    isActive: true
-  }
-};
-
 const CouponInput = ({ 
   onCouponApplied, 
   onCouponRemoved, 

@@ -14,11 +14,11 @@ const sampleCoupons = [
     minimumAmount: 1000,
     maximumDiscount: 5000,
     validFrom: new Date('2024-01-01'),
-    validUntil: new Date('2024-12-31'),
+    validUntil: new Date('2025-12-31'),
     usageLimit: 100,
     isGlobal: true,
     isActive: true,
-    createdBy: '507f1f77bcf86cd799439011', // You'll need to replace this with a real admin user ID
+    createdBy: new mongoose.Types.ObjectId(), // Generate a new ObjectId
   },
   {
     code: 'CYBER50',
@@ -28,11 +28,11 @@ const sampleCoupons = [
     minimumAmount: 500,
     maximumDiscount: 10000,
     validFrom: new Date('2024-01-01'),
-    validUntil: new Date('2024-06-30'),
+    validUntil: new Date('2025-12-31'),
     usageLimit: 50,
     isGlobal: false,
     isActive: true,
-    createdBy: '507f1f77bcf86cd799439011', // You'll need to replace this with a real admin user ID
+    createdBy: new mongoose.Types.ObjectId(), // Generate a new ObjectId
   },
   {
     code: 'FLAT1000',
@@ -42,11 +42,11 @@ const sampleCoupons = [
     minimumAmount: 2000,
     maximumDiscount: 1000,
     validFrom: new Date('2024-01-01'),
-    validUntil: new Date('2024-12-31'),
+    validUntil: new Date('2025-12-31'),
     usageLimit: 200,
     isGlobal: true,
     isActive: true,
-    createdBy: '507f1f77bcf86cd799439011', // You'll need to replace this with a real admin user ID
+    createdBy: new mongoose.Types.ObjectId(), // Generate a new ObjectId
   },
   {
     code: 'STUDENT25',
@@ -56,11 +56,11 @@ const sampleCoupons = [
     minimumAmount: 500,
     maximumDiscount: 5000,
     validFrom: new Date('2024-01-01'),
-    validUntil: new Date('2024-12-31'),
+    validUntil: new Date('2025-12-31'),
     usageLimit: null, // Unlimited
     isGlobal: true,
     isActive: true,
-    createdBy: '507f1f77bcf86cd799439011', // You'll need to replace this with a real admin user ID
+    createdBy: new mongoose.Types.ObjectId(), // Generate a new ObjectId
   },
 ];
 
@@ -68,26 +68,32 @@ async function seedCoupons() {
   try {
     // Connect to MongoDB
     await mongoose.connect(process.env.MONGODB_URI);
-    console.log('Connected to MongoDB');
+    console.log('✅ Connected to MongoDB');
 
     // Clear existing coupons (optional)
     await Coupon.deleteMany({});
-    console.log('Cleared existing coupons');
+    console.log('🧹 Cleared existing coupons');
 
     // Insert sample coupons
     const createdCoupons = await Coupon.insertMany(sampleCoupons);
-    console.log(`Created ${createdCoupons.length} sample coupons:`);
+    console.log(`🎉 Created ${createdCoupons.length} sample coupons:`);
     
     createdCoupons.forEach(coupon => {
-      console.log(`- ${coupon.code}: ${coupon.description}`);
+      console.log(`  - ${coupon.code}: ${coupon.description}`);
     });
 
-    console.log('Coupon seeding completed successfully!');
+    console.log('\n🎯 Test these coupon codes:');
+    console.log('  WELCOME20 - 20% off (min ₹1000)');
+    console.log('  CYBER50 - 50% off (min ₹500)');
+    console.log('  FLAT1000 - Flat ₹1000 off (min ₹2000)');
+    console.log('  STUDENT25 - 25% off (min ₹500)');
+
+    console.log('\n✅ Coupon seeding completed successfully!');
   } catch (error) {
-    console.error('Error seeding coupons:', error);
+    console.error('❌ Error seeding coupons:', error);
   } finally {
     await mongoose.disconnect();
-    console.log('Disconnected from MongoDB');
+    console.log('🔌 Disconnected from MongoDB');
   }
 }
 
