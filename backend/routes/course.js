@@ -28,7 +28,7 @@ router.get("/lecture/:id", isAuth, fetchLecture);
 router.get("/mycourse", isAuth, getMyCourses);
 
 // PhonePe payment endpoints
-router.post("/course/phonepe/checkout/:id", isAuth, phonepeCheckout);
+router.post("/course/:id/phonepe-checkout", isAuth, phonepeCheckout);
 router.post("/course/phonepe/status/:merchantOrderId", isAuth, phonepeStatus);
 
 // Temporary coupon validation endpoint (workaround until coupon routes are deployed)
