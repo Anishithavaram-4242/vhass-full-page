@@ -20,16 +20,18 @@ router.get("/course/all", getAllCourses);
 
 // Update lecture route to use uploadFiles middleware
 router.post("/course/new", isAuth, isAdmin, createCourse);
+
+// PhonePe payment endpoints - MUST come BEFORE generic /course/:id route
+router.post("/course/:id/phonepe-checkout", isAuth, phonepeCheckout);
+router.post("/course/phonepe/status/:merchantOrderId", isAuth, phonepeStatus);
+
+// Generic course routes - MUST come AFTER specific routes
 router.post("/course/:id", isAuth, isAdmin, uploadFiles.fields([{ name: 'file', maxCount: 1 }]), addLectures);
 router.delete("/course/:id", isAuth, isAdmin, deleteCourse);
 router.get("/course/:id", getSingleCourse);
 router.get("/lectures/:id", isAuth, fetchLectures);
 router.get("/lecture/:id", isAuth, fetchLecture);
 router.get("/mycourse", isAuth, getMyCourses);
-
-// PhonePe payment endpoints
-router.post("/course/:id/phonepe-checkout", isAuth, phonepeCheckout);
-router.post("/course/phonepe/status/:merchantOrderId", isAuth, phonepeStatus);
 
 // Temporary coupon validation endpoint (workaround until coupon routes are deployed)
 router.post("/course/validate-coupon", async (req, res) => {
