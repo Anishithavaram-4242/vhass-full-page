@@ -200,7 +200,7 @@ class ApiService {
 
   // Payment APIs
   async phonepeCheckout(type, id) {
-    const endpoint = type === 'course' ? `/api/course/phonepe/checkout/${id}` : `/api/workshop/phonepe/checkout/${id}`;
+    const endpoint = type === 'course' ? `/api/course/${id}/phonepe-checkout` : `/api/workshop/phonepe/checkout/${id}`;
     return this.makeRequest(endpoint, {
       method: 'POST',
     });
