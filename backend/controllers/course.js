@@ -253,8 +253,6 @@ export const phonepeCheckout = async (req, res) => {
 };
 
 export const phonepeStatus = TryCatch(async (req, res) => {
-
-
   const merchantOrderId = req.params.merchantOrderId;
   console.log("phonepeStatus (course) – merchantOrderId:", merchantOrderId);
 
@@ -263,6 +261,7 @@ export const phonepeStatus = TryCatch(async (req, res) => {
   const userID = user._id;
   const userEmail = user.email;
 
+  const client = getPhonePeClient();
   const statusResponse = await client.getOrderStatus(merchantOrderId);
 
   console.log("PhonePe getOrderStatus response:", statusResponse);
