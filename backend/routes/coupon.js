@@ -1,40 +1,19 @@
 import express from "express";
-import {
-  getAllCourses,
-  getSingleCourse,
-  fetchLectures,
-  fetchLecture,
-  getMyCourses,
-  phonepeCheckout,
-  phonepeStatus,
-  createCourse
-} from "../controllers/course.js";
-import { isAuth, isAdmin } from "../middlewares/isAuth.js";
-import { deleteCourse, addLectures } from "../controllers/admin.js";
-import { uploadFiles } from "../middlewares/multer.js";
 import { Coupon } from "../models/Coupon.js";
 
 const router = express.Router();
 
-router.get("/course/all", getAllCourses);
+// Test endpoint (no auth required)
+router.get("/test", (req, res) => {
+  res.json({ 
+    success: true, 
+    message: "Coupon API is working!",
+    timestamp: new Date().toISOString()
+  });
+});
 
-// Update lecture route to use uploadFiles middleware
-router.post("/course/new", isAuth, isAdmin, createCourse);
-
-// PhonePe payment endpoints - MUST come BEFORE generic /course/:id route
-router.post("/course/:id/phonepe-checkout", isAuth, phonepeCheckout);
-router.post("/course/phonepe/status/:merchantOrderId", isAuth, phonepeStatus);
-
-// Generic course routes - MUST come AFTER specific routes
-router.post("/course/:id", isAuth, isAdmin, uploadFiles.fields([{ name: 'file', maxCount: 1 }]), addLectures);
-router.delete("/course/:id", isAuth, isAdmin, deleteCourse);
-router.get("/course/:id", getSingleCourse);
-router.get("/lectures/:id", isAuth, fetchLectures);
-router.get("/lecture/:id", isAuth, fetchLecture);
-router.get("/mycourse", isAuth, getMyCourses);
-
-// Temporary coupon validation endpoint (workaround until coupon routes are deployed)
-router.post("/course/validate-coupon", async (req, res) => {
+// Simple coupon validation endpoint (no auth required for now)
+router.post("/validate", async (req, res) => {
   try {
     const { code, amount } = req.body;
     
