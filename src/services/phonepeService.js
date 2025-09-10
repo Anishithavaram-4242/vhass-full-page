@@ -83,12 +83,43 @@ class PhonePeService {
       console.log('User Data:', userData);
       console.log('Course Data:', courseData);
       
+      // If a course id is provided, align with backend route: /api/course/:id/phonepe-checkout
+      const apiBase = import.meta.env.VITE_API_URL || '/api';
+      const courseId = courseData?._id || courseData?.id;
+      if (courseId) {
+        console.log('Using course checkout endpoint for PhonePe');
+        const response = await fetch(`${apiBase}/course/${courseId}/phonepe-checkout`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({
+            name: userData?.name,
+            email: userData?.email,
+            mobile: userData?.mobile,
+            amount: amount
+          })
+        });
+
+        const data = await response.json();
+        console.log('Course checkout response:', data);
+        if (!response.ok || !data.success) {
+          const message = data?.message || 'Payment initiation failed';
+          throw new Error(message);
+        }
+
+        return {
+          success: true,
+          paymentUrl: data.checkoutPageUrl,
+          transactionId: data.merchantOrderId
+        };
+      }
+      
+      // Fallback to proxy flow if no course id (generic initiate)
       const payload = this.createPaymentPayload(orderId, amount, userData, courseData);
       console.log('Payment Payload:', payload);
       
-      // Send only payload; backend will compute base64 and X-VERIFY using server salt key
-
-      // Use backend proxy to avoid CORS issues
       const requestBody = {
         payload: payload,
         environment: this.ENVIRONMENT
@@ -96,7 +127,7 @@ class PhonePeService {
       
       console.log('Request Body:', requestBody);
       
-      const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/phonepe/initiate`, {
+      const response = await fetch(`${apiBase}/phonepe/initiate`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -119,16 +150,7 @@ class PhonePeService {
         };
       } else {
         console.error('PhonePe API error:', data);
-        // Extract the actual error message from PhonePe response
         const errorMessage = data.message || data.error || data.data?.message || data.data?.error || data.code || 'Payment initiation failed';
-        console.error('PhonePe error details:', {
-          success: data.success,
-          message: data.message,
-          error: data.error,
-          data: data.data,
-          code: data.code,
-          fullResponse: data
-        });
         throw new Error(`PhonePe Error: ${errorMessage}`);
       }
     } catch (error) {
@@ -137,7 +159,7 @@ class PhonePeService {
     }
   }
 
-  // Check payment status
+  // Check payment status via generic proxy
   async checkPaymentStatus(merchantTransactionId) {
     try {
       const payload = {
@@ -145,9 +167,6 @@ class PhonePeService {
         merchantTransactionId: merchantTransactionId
       };
 
-      // Backend will compute X-VERIFY for status, send only identifiers
-
-      // Use backend proxy to avoid CORS issues
       const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/phonepe/status`, {
         method: 'POST',
         headers: {
@@ -178,6 +197,23 @@ class PhonePeService {
       console.error('PhonePe status check error:', error);
       throw error;
     }
+  }
+
+  // Check course payment status via course route
+  async checkCoursePaymentStatus(merchantOrderId) {
+    const apiBase = import.meta.env.VITE_API_URL || '/api';
+    const response = await fetch(`${apiBase}/course/phonepe/status/${merchantOrderId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include'
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data?.message || 'Course status check failed');
+    }
+    return data;
   }
 
   // Generate unique order ID
