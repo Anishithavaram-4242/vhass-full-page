@@ -35,18 +35,10 @@ export const AuthProvider = ({ children }) => {
     setLastCheck(now);
 
     try {
-      const response = await ApiService.getProfile();
-      if (response.user) {
-        setUser(response.user);
-      } else {
-        setUser(null);
-      }
+      const profile = await ApiService.getProfile();
+      setUser(profile?.user || profile || null);
     } catch (error) {
-      console.log('User not authenticated:', error.message);
       setUser(null);
-      if (error.message !== 'Authentication required') {
-        console.error('Auth check error:', error);
-      }
     } finally {
       setLoading(false);
     }
@@ -54,28 +46,19 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (credentials) => {
     try {
-      let response;
+      const response = credentials.googleId
+        ? await ApiService.googleLogin(credentials)
+        : await ApiService.login(credentials);
 
-      if (credentials.googleId) {
-        response = await ApiService.googleLogin(credentials);
-      } else {
-        response = await ApiService.login(credentials);
-      }
-
-      if (response.success) {
-        setUser(response.user);
-
-        // ✅ Save token after login
-        if (response.token) {
-          localStorage.setItem('auth_token', response.token);
-        }
-
+      if (response?.token) {
+        localStorage.setItem('auth_token', response.token);
+        const profile = await ApiService.getProfile();
+        setUser(profile?.user || profile || null);
         return { success: true };
       }
 
-      return { success: false, error: response.message || 'Login failed' };
+      return { success: false, error: response?.message || 'Login failed' };
     } catch (error) {
-      console.error('Login error:', error);
       return { success: false, error: error.message };
     }
   };
@@ -94,8 +77,14 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
-      await ApiService.register(userData);
-      return { success: true };
+      const response = await ApiService.register(userData);
+      if (response?.token) {
+        localStorage.setItem('auth_token', response.token);
+        const profile = await ApiService.getProfile();
+        setUser(profile?.user || profile || null);
+        return { success: true };
+      }
+      return { success: false, error: response?.message || 'Signup failed' };
     } catch (error) {
       return { success: false, error: error.message };
     }

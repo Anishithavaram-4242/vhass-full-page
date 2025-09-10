@@ -13,6 +13,16 @@ class ApiService {
     console.log('🚀 ApiService initialized with baseURL:', this.baseURL);
   }
 
+  // Always include auth token and allow extra headers
+  getHeaders(extraHeaders = {}) {
+    const token = localStorage.getItem('auth_token');
+    return {
+      'Content-Type': 'application/json',
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...extraHeaders,
+    };
+  }
+
   // Helper method to make API calls
   async makeRequest(endpoint, options = {}) {
     // Remove leading slash if present to avoid double slashes
@@ -20,15 +30,8 @@ class ApiService {
     const url = `${this.baseURL}/${cleanEndpoint}?_cb=${CACHE_BUSTER}`;
     console.log('🌐 Making API request to:', url);
     
-    // Get token from localStorage
-    const token = localStorage.getItem('auth_token');
-    
     const config = {
-      headers: {
-        'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` }),
-        ...options.headers,
-      },
+      headers: this.getHeaders(options.headers),
       credentials: 'include', // Include cookies for session management
       mode: 'cors', // Explicitly set CORS mode
       ...options,
@@ -42,7 +45,13 @@ class ApiService {
         // Clear any stored auth data
         localStorage.removeItem('auth_token');
         sessionStorage.removeItem('auth_token');
-        throw new Error('Authentication required');
+        // Force redirect to login to re-authenticate
+        try {
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+          }
+        } catch (_) {}
+        throw new Error('Unauthorized');
       }
       
       // Check if response is JSON before trying to parse
