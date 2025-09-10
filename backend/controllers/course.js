@@ -241,48 +241,10 @@ export const phonepeCheckout = async (req, res) => {
       return res.status(400).json({ message: 'You already have this course' });
     }
 
-    // Handle coupon discount if provided
-    const { couponCode } = req.body;
-    let originalAmount = Number(course.price);
-    let finalAmount = originalAmount;
-    let discountAmount = 0;
-    let couponData = null;
-
-    console.log('💰 Amount calculation:', { originalAmount, couponCode });
-
-    if (couponCode) {
-      try {
-        console.log('🎫 Validating coupon:', couponCode);
-        // Validate coupon
-        const couponResponse = await fetch(`${req.protocol}://${req.get('host')}/api/course/validate-coupon`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Cookie': req.headers.cookie || '',
-          },
-          body: JSON.stringify({
-            code: couponCode,
-            courseId: course._id,
-            amount: originalAmount,
-          }),
-        });
-
-        if (couponResponse.ok) {
-          const couponResult = await couponResponse.json();
-          if (couponResult.success) {
-            couponData = couponResult.data;
-            finalAmount = couponData.finalAmount;
-            discountAmount = couponData.discountAmount;
-            console.log('✅ Coupon applied:', { finalAmount, discountAmount });
-          }
-        } else {
-          console.log('⚠️ Coupon validation failed:', couponResponse.status);
-        }
-      } catch (couponError) {
-        console.error('❌ Coupon validation error:', couponError);
-        // Continue with original amount if coupon validation fails
-      }
-    }
+    // Coupon support removed: always use course price as final amount
+    const originalAmount = Number(course.price);
+    const finalAmount = originalAmount;
+    const discountAmount = 0;
 
     const merchantOrderId = randomUUID();
     const amount = Math.round(finalAmount * 100); // in paise
@@ -308,7 +270,7 @@ export const phonepeCheckout = async (req, res) => {
       originalAmount: originalAmount,
       discountAmount: discountAmount,
       finalAmount: finalAmount,
-      couponCode: couponCode || null,
+      couponCode: null,
       transactionStatus: "PENDING",
     });
     console.log('✅ Transaction created:', txn._id);

@@ -183,7 +183,6 @@ import userRoutes from "./routes/user.js";
 import courseRoutes from "./routes/course.js";
 import adminRoutes from "./routes/admin.js";
 import workshopRoutes from "./routes/workshop.js";
-import couponRoutes from "./routes/coupon.js";
 
 // using routes
 app.use("/api/admin", adminRoutes);
@@ -201,8 +200,7 @@ console.log('Registered course routes:', courseRoutes.stack.map(r => r.route ? r
 app.use("/api", workshopRoutes);
 console.log('Registered workshop routes:', workshopRoutes.stack.map(r => r.route ? r.route.path : 'unknown'));
 
-app.use("/api/coupon", couponRoutes);
-console.log('Registered coupon routes:', couponRoutes.stack.map(r => r.route ? r.route.path : 'unknown'));
+
 
 // Health check endpoint
 app.get('/health', (req, res) => {

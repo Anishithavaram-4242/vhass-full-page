@@ -39,11 +39,7 @@ const schema = new mongoose.Schema(
       type: String,
     },
 
-    // Coupon related fields
-    couponCode: {
-      type: String,
-    },
-
+    // Pricing fields (coupon system removed)
     originalAmount: {
       type: Number,
     },

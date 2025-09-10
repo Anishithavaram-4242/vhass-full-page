@@ -6,7 +6,6 @@ async function testRoutes() {
 
   const routesToTest = [
     { path: '/api/course/all', method: 'GET', description: 'Get all courses' },
-    { path: '/api/course/validate-coupon', method: 'POST', description: 'Validate coupon' },
     { path: '/api/course/test-course-id/phonepe-checkout', method: 'POST', description: 'PhonePe checkout' },
     { path: '/health', method: 'GET', description: 'Health check' },
   ];

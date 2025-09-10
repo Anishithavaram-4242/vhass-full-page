@@ -9,7 +9,7 @@ import { Phone, Mail, MapPin, Linkedin, Youtube, Instagram, ArrowLeft, X } from 
 import Navbar from "@/Components/navbar"
 import { useAuth } from "../../context/AuthContext.jsx"
 import ApiService from "../../services/api.js"
-import CouponInput from "../CouponInput.jsx"
+// CouponInput removed
 
 // Helper function to construct proper image URL
 const getImageUrl = (imagePath) => {
@@ -170,7 +170,6 @@ export default function CourseDetailsPage() {
   })
   const [course, setCourse] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [appliedCoupon, setAppliedCoupon] = useState(null)
   const [finalAmount, setFinalAmount] = useState(null)
 
   useEffect(() => {
@@ -251,18 +250,13 @@ export default function CourseDetailsPage() {
     setIsProcessingPayment(true)
     
     try {
-      // Pass coupon code to backend if applied
-      const requestBody = appliedCoupon ? {
-        couponCode: appliedCoupon.coupon.code
-      } : {};
-
       const resp = await fetch(`/api/course/${course._id || course.id}/phonepe-checkout`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify(requestBody),
+        body: JSON.stringify({}),
       });
 
       const data = await resp.json();
@@ -287,15 +281,7 @@ export default function CourseDetailsPage() {
     })
   }
 
-  const handleCouponApplied = (couponData) => {
-    setAppliedCoupon(couponData)
-    setFinalAmount(couponData.finalAmount)
-  }
-
-  const handleCouponRemoved = () => {
-    setAppliedCoupon(null)
-    setFinalAmount(null)
-  }
+  // Coupon handlers removed
 
   return (
     <div className="min-h-screen">
@@ -469,14 +455,7 @@ export default function CourseDetailsPage() {
                 />
               </div>
               
-              {/* Coupon Input */}
-              <CouponInput
-                onCouponApplied={handleCouponApplied}
-                onCouponRemoved={handleCouponRemoved}
-                originalAmount={parseInt(course.price.replace('₹', ''))}
-                courseId={course._id}
-                disabled={isProcessingPayment}
-              />
+              {/* Coupon removed */}
               
               <div className="bg-gray-800 p-4 rounded-lg">
                 <p className="text-sm" style={{ color: "#B88AFF" }}>
@@ -485,11 +464,7 @@ export default function CourseDetailsPage() {
                 <p className="text-sm" style={{ color: "#B88AFF" }}>
                   <strong>Price:</strong> {course.price}
                 </p>
-                {finalAmount && (
-                  <p className="text-sm text-green-400 mt-2">
-                    <strong>Final Price:</strong> ₹{finalAmount}
-                  </p>
-                )}
+                {/* Final price display removed (no coupons) */}
               </div>
               
               <div className="flex gap-4">
